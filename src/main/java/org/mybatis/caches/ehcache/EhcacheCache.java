@@ -173,6 +173,9 @@ public final class EhcacheCache implements Cache {
         return CACHE_MANAGER.getCache(this.id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -189,11 +192,17 @@ public final class EhcacheCache implements Cache {
         return this.id.equals(otherCache.getId());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return this.id.hashCode();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "EHCache {"
