@@ -173,4 +173,32 @@ public final class EhcacheCache implements Cache {
         return CACHE_MANAGER.getCache(this.id);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Cache)) {
+            return false;
+        }
+
+        Cache otherCache = (Cache) obj;
+        return this.id.equals(otherCache.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "EHCache {"
+                + this.id
+                + "}";
+    }
+
 }
