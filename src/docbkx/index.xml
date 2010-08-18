@@ -67,7 +67,15 @@
             <para>then, just configure it in the mapper XML</para>
             <programlisting language="xml"><![CDATA[<mapper namespace="org.acme.FooMapper">
 
-    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    <cache type="]]><?eval ${project.groupId}?><![CDATA[.ehcache.EhcacheCache"/>
+
+    ...
+
+</mapper>]]></programlisting>
+            <para>If users need to log cache operations, they can plug the Cache logging version:</para>
+            <programlisting language="xml"><![CDATA[<mapper namespace="org.acme.FooMapper">
+
+    <cache type="]]><?eval ${project.groupId}?><![CDATA[.ehcache.LoggingEhcache"/>
 
     ...
 
