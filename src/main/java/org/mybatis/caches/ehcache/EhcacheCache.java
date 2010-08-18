@@ -84,6 +84,9 @@ public final class EhcacheCache implements Cache {
      * @param id
      */
     public EhcacheCache(final String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Cache instances require an ID");
+        }
         this.id = id;
         if (!CACHE_MANAGER.cacheExists(this.id)) {
             CACHE_MANAGER.addCache(this.id);
