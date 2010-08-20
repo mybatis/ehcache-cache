@@ -83,6 +83,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
+                            <attach>false</attach>
                             <descriptors>
                                 <descriptor>bundle.xml</descriptor>
                             </descriptors>
