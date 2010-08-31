@@ -91,6 +91,26 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>com.googlecode.maven-gcu-plugin</groupId>
+                <artifactId>maven-gcu-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <failsOnError>true</failsOnError>
+                    <projectName>mybatis</projectName>
+                    <uploads>
+                         <upload>
+                            <file>${project.build.directory}/${project.artifactId}-${project.version}-bundle.zip</file>
+                            <summary>${project.description} ${pom.version} release</summary>
+                            <labels>
+                                <label>Featured</label>
+                                <label>Type-Archive</label>
+                            </labels>
+                        </upload>
+                    </uploads>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
