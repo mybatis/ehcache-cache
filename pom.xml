@@ -33,6 +33,10 @@
     <name>MyBatis Caches :: Ehcache</name>
     <description>Ehcache support for MyBatis Cache</description>
 
+    <properties>
+        <findbugs.onlyAnalyze>org.mybatis.caches.ehcache.*</findbugs.onlyAnalyze>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>net.sf.ehcache</groupId>
