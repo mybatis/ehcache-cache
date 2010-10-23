@@ -36,6 +36,7 @@
 
     <properties>
         <findbugs.onlyAnalyze>org.mybatis.caches.ehcache.*</findbugs.onlyAnalyze>
+        <clirr.comparisonVersion>1.0.0-RC1</clirr.comparisonVersion>
     </properties>
 
     <dependencies>
