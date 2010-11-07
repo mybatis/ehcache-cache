@@ -112,7 +112,7 @@ public final class EhcacheCache implements Cache {
      */
     public Object getObject(Object key) {
         try {
-            Element cachedElement = this.getCache().get(key);
+            Element cachedElement = this.getCache().get(key.hashCode());
             if (cachedElement == null) {
                 return null;
             }
@@ -145,7 +145,7 @@ public final class EhcacheCache implements Cache {
      */
     public void putObject(Object key, Object value) {
         try {
-            this.getCache().put(new Element(key, value));
+            this.getCache().put(new Element(key.hashCode(), value));
         } catch (Throwable t) {
             throw new CacheException(t);
         }
@@ -157,7 +157,7 @@ public final class EhcacheCache implements Cache {
     public Object removeObject(Object key) {
         try {
             Object obj = this.getObject(key);
-            this.getCache().remove(key);
+            this.getCache().remove(key.hashCode());
             return obj;
         } catch (Throwable t) {
             throw new CacheException(t);
