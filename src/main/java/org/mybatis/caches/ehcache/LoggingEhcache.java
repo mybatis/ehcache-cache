@@ -18,7 +18,7 @@ package org.mybatis.caches.ehcache;
 import org.apache.ibatis.cache.decorators.LoggingCache;
 
 /**
- * {@link LoggingCache} adapter for Ehcache.
+ * {@code LoggingCache} adapter for Ehcache.
  *
  * @version $Id$
  */

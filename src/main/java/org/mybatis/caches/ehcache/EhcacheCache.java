@@ -69,7 +69,7 @@ public final class EhcacheCache implements Cache {
     }
 
     /**
-     * The {@link ReadWriteLock}.
+     * The {@code ReadWriteLock}.
      */
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
