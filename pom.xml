@@ -30,13 +30,13 @@
     <artifactId>mybatis-ehcache</artifactId>
     <packaging>jar</packaging>
     <name>MyBatis Caches :: Ehcache</name>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <description>Ehcache support for MyBatis Cache</description>
 
     <scm>
-        <url>scm:svn:http://mybatis.googlecode.com/svn/sub-projects/caches/tags/mybatis-ehcache-1.0.0</url>
-        <connection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/tags/mybatis-ehcache-1.0.0</connection>
-        <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/tags/mybatis-ehcache-1.0.0</developerConnection>
+        <url>scm:svn:http://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</url>
+        <connection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</connection>
+        <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</developerConnection>
     </scm>
 
     <properties>
