@@ -30,7 +30,7 @@
     <artifactId>mybatis-ehcache</artifactId>
     <packaging>jar</packaging>
     <name>MyBatis Caches :: Ehcache</name>
-    <version>2</version>
+    <version>1.0.0-SNAPSHOT</version>
     <description>Ehcache support for MyBatis Cache</description>
 
     <scm>
