@@ -68,7 +68,7 @@
             <para>then, just configure it in the mapper XML</para>
             <programlisting language="xml"><![CDATA[<mapper namespace="org.acme.FooMapper">
 
-    <cache type="]]><?eval ${project.groupId}?><![CDATA[.ehcache.EhcacheCache"/>
+    <cache type="]]><?eval ${project.groupId}?><![CDATA[.caches.ehcache.EhcacheCache"/>
 
     ...
 
@@ -76,7 +76,7 @@
             <para>If users need to log cache operations, they can plug the Cache logging version:</para>
             <programlisting language="xml"><![CDATA[<mapper namespace="org.acme.FooMapper">
 
-    <cache type="]]><?eval ${project.groupId}?><![CDATA[.ehcache.LoggingEhcache"/>
+    <cache type="]]><?eval ${project.groupId}?><![CDATA[.caches.ehcache.LoggingEhcache"/>
 
     ...
 
