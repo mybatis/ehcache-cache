@@ -40,28 +40,28 @@
             Apache Maven users instead can simply add in
             the <code>pom.xml</code> the following dependency:</p>
             <source><![CDATA[<dependencies>
-    ...
-    <dependency>
-        <groupId>org.mybatis.caches</groupId>
-        <artifactId>mybatis-ehcache</artifactId>
-        <version>X.X.X</version>
-    </dependency>
-    ...
+  ...
+  <dependency>
+    <groupId>org.mybatis.caches</groupId>
+    <artifactId>mybatis-ehcache</artifactId>
+    <version>X.X.X</version>
+  </dependency>
+  ...
 </dependencies>]]></source>
             <p>then, just configure it in the mapper XML</p>
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
 
-    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
 
-    ...
+  ...
 
 </mapper>]]></source>
             <p>If users need to log cache operations, they can plug the Cache logging version:</p>
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
 
-    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+  <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
 
-    ...
+  ...
 
 </mapper>]]></source>
             <p>Users that need to configure EHCache through XML configuration file, have to
