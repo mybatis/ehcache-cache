@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>8</version>
+    <version>11</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -68,7 +68,7 @@
     </dependency>
 
     <!--
-     | required by Doclava...
+     | required by EHCACHE...
     -->
     <dependency>
       <groupId>org.slf4j</groupId>
