@@ -39,6 +39,13 @@
     <connection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</connection>
     <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</developerConnection>
   </scm>
+  <distributionManagement>
+    <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
+    <site>
+      <id>mybatis.site</id>
+      <url>ftp://${mybatis.host}/caches/ehcache</url>
+    </site>
+  </distributionManagement>
 
   <properties>
     <findbugs.onlyAnalyze>org.mybatis.caches.ehcache.*</findbugs.onlyAnalyze>
