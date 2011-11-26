@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2010-2011 The myBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  version: $Id$
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis EHCache | Reference Documentation</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+    <section name="MyBatis EHCache integration - Reference Documentation">
+
+    <p><a href="http://ehcache.org/">EHCache</a> is a widely used java distributed cache for general purpose caching,
+            Java EE and light-weight containers.</p>
+            <p>The EHCache integration is built on top of the <code>ehcache-core</code> and comes without
+            any EHCache 3rd part applications. Please refeer to official EHCache
+            <a href="http://ehcache.org/documentation/index.html">documentation</a> if you need plugins.</p>
+            <p>Users that want to use EHCache into their applications, have to download the <?eval ${project.version}?> zip
+            <a href="http://code.google.com/p/mybatis/downloads/list?q=Product-Cache">bundle</a>, decompress it and add the jars in the classpath;
+            Apache Maven users instead can simply add in
+            the <code>pom.xml</code> the following dependency:</p>
+            <source><![CDATA[<dependencies>
+    ...
+    <dependency>
+        <groupId>org.mybatis.caches</groupId>
+        <artifactId>mybatis-ehcache</artifactId>
+        <version>X.X.X</version>
+    </dependency>
+    ...
+</dependencies>]]></source>
+            <p>then, just configure it in the mapper XML</p>
+            <source><![CDATA[<mapper namespace="org.acme.FooMapper">
+
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
+    ...
+
+</mapper>]]></source>
+            <p>If users need to log cache operations, they can plug the Cache logging version:</p>
+            <source><![CDATA[<mapper namespace="org.acme.FooMapper">
+
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+
+    ...
+
+</mapper>]]></source>
+            <p>Users that need to configure EHCache through XML configuration file, have to
+  put in the classpath the <code>/ehcache.xml</code> resource; please refeer to the
+  official EHCache <a href="http://ehcache.org/documentation/configuration.html">documentation</a>
+  to know more details.</p>
+
+            <p>If the <code>/ehcache.xml</code> resource is not found or something goes
+  wrong while loading it, the default configuration will be used.</p>
+        </section>
+    </body>
+
+</document>
