@@ -33,6 +33,7 @@
   <name>MyBatis Caches :: Ehcache</name>
   <version>1.0.1-SNAPSHOT</version>
   <description>Ehcache support for MyBatis Cache</description>
+  <url>http://www.mybatis.org/caches/ehcache/${project.version}</url>
 
   <scm>
     <url>scm:svn:http://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</url>
