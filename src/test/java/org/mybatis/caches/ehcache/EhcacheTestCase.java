@@ -1,5 +1,5 @@
 /*
- *    Copyright 2010 The MyBatis Team
+ *    Copyright 2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,25 +19,25 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.apache.ibatis.cache.Cache;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
- *
  * @version $Id$
  */
 public final class EhcacheTestCase {
 
     private static final String DEFAULT_ID = "EHCACHE";
 
-    private static Cache newCache() {
-        return new EhcacheCache(DEFAULT_ID);
+    private EhcacheCache cache;
+
+    @Before
+    public void newCache() {
+        cache = new EhcacheCache(DEFAULT_ID);
     }
 
     @Test
     public void shouldDemonstrateHowAllObjectsAreKept() {
-        Cache cache = newCache();
         for (int i = 0; i < 100000; i++) {
             cache.putObject(i, i);
             assertEquals(i, cache.getObject(i));
@@ -47,7 +47,6 @@ public final class EhcacheTestCase {
 
     @Test
     public void shouldDemonstrateCopiesAreEqual() {
-        Cache cache = newCache();
         for (int i = 0; i < 1000; i++) {
             cache.putObject(i, i);
             assertEquals(i, cache.getObject(i));
@@ -56,7 +55,6 @@ public final class EhcacheTestCase {
 
     @Test
     public void shouldRemoveItemOnDemand() {
-        Cache cache = newCache();
         cache.putObject(0, 0);
         assertNotNull(cache.getObject(0));
         cache.removeObject(0);
@@ -65,7 +63,6 @@ public final class EhcacheTestCase {
 
     @Test
     public void shouldFlushAllItemsOnDemand() {
-        Cache cache = newCache();
         for (int i = 0; i < 5; i++) {
             cache.putObject(i, i);
         }
@@ -75,5 +72,15 @@ public final class EhcacheTestCase {
         assertNull(cache.getObject(0));
         assertNull(cache.getObject(4));
     }
+
+    @Test
+    public void shouldChangeTimeToLive() throws Exception {
+      cache.putObject("test", "test");
+      Thread.sleep(1200);
+      assertEquals(cache.getObject("test"), "test");
+      cache.setTimeToLiveSeconds(1);
+      Thread.sleep(1200);
+      assertNull(cache.getObject("test"));
+  }
 
 }

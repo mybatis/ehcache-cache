@@ -1,5 +1,5 @@
 /*
- *    Copyright 2010 The MyBatis Team
+ *    Copyright 2010-2012 The MyBatis Team
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.config.CacheConfiguration;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
@@ -59,6 +60,7 @@ public final class EhcacheCache implements Cache {
                 try {
                     input.close();
                 } catch (IOException e) {
+                    // ignored
                 }
             }
         } else {
@@ -174,6 +176,15 @@ public final class EhcacheCache implements Cache {
     }
 
     /**
+     * Returns the configuration for this cache.
+     *
+     * @return the configuration for this cache.
+     */
+    private CacheConfiguration getCacheConfiguration() {
+        return this.getCache().getCacheConfiguration();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -208,6 +219,53 @@ public final class EhcacheCache implements Cache {
         return "EHCache {"
                 + this.id
                 + "}";
+    }
+
+    // DYNAMIC PROPERTIES
+
+    /**
+     * Sets the time to idle for an element before it expires. Is only used if the element is not eternal.
+     *
+     * @param timeToIdleSeconds the default amount of time to live for an element from its last accessed or modified date
+     */
+    public void setTimeToIdleSeconds(long timeToIdleSeconds) {
+        this.getCacheConfiguration().setTimeToIdleSeconds(timeToIdleSeconds);
+    }
+
+    /**
+     * Sets the time to idle for an element before it expires. Is only used if the element is not eternal.
+     *
+     * @param timeToLiveSeconds the default amount of time to live for an element from its creation date
+     */
+    public void setTimeToLiveSeconds(long timeToLiveSeconds) {
+        this.getCacheConfiguration().setTimeToLiveSeconds(timeToLiveSeconds);
+    }
+
+    /**
+     * Sets the maximum objects to be held in memory (0 = no limit).
+     *
+     * @param maxElementsInMemory The maximum number of elements in memory, before they are evicted (0 == no limit)
+     */
+    public void setMaxEntriesLocalHeap(long maxEntriesLocalHeap) {
+        this.getCacheConfiguration().setMaxEntriesLocalHeap(maxEntriesLocalHeap);
+    }
+
+    /**
+     * Sets the maximum number elements on Disk. 0 means unlimited.
+     *
+     * @param maxElementsOnDisk the maximum number of Elements to allow on the disk. 0 means unlimited.
+     */
+    public void setMaxEntriesLocalDisk(long maxEntriesLocalDisk) {
+        this.getCacheConfiguration().setMaxEntriesLocalDisk(maxEntriesLocalDisk);
+    }
+
+    /**
+     * Sets the eviction policy. An invalid argument will set it to null.
+     *
+     * @param memoryStoreEvictionPolicy a String representation of the policy. One of "LRU", "LFU" or "FIFO".
+     */
+    public void setMemoryStoreEvictionPolicy(String memoryStoreEvictionPolicy) {
+        this.getCacheConfiguration().setMemoryStoreEvictionPolicy(memoryStoreEvictionPolicy);
     }
 
 }
