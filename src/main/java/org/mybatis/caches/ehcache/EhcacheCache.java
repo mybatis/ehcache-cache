@@ -38,37 +38,7 @@ public final class EhcacheCache implements Cache {
     /**
      * The cache manager reference.
      */
-    private static final CacheManager CACHE_MANAGER = createCacheManager();
-
-    /**
-     * Looks for "/ehcache.xml" classpath resource and builds the relative
-     * {@code CacheManager}; if it's no found or it is impossible to load it,
-     * returns the default manager.
-     *
-     * @return the application cache manager.
-     */
-    private static CacheManager createCacheManager() {
-        CacheManager cacheManager;
-        InputStream input = EhcacheCache.class.getResourceAsStream("/ehcache.xml");
-
-        if (input != null) {
-            try {
-                cacheManager = CacheManager.create(input);
-            } catch (Throwable t) {
-                cacheManager = CacheManager.create();
-            } finally {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignored
-                }
-            }
-        } else {
-            cacheManager = CacheManager.create();
-        }
-
-        return cacheManager;
-    }
+    private static final CacheManager CACHE_MANAGER = CacheManager.create();
 
     /**
      * The {@code ReadWriteLock}.
