@@ -15,8 +15,6 @@
  */
 package org.mybatis.caches.ehcache;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
