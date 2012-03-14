@@ -18,7 +18,7 @@
 	</properties>
 
 	<body>
-		<release version="1.0.1" date="2011-06-01" description="1.0.1 release">
+		<release version="1.0.1" date="TBD" description="1.0.1 release">
 			<action type="update" issue="285">
 				Configure Ehcache directly in Mapper XML
 			</action>
