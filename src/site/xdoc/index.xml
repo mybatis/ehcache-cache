@@ -50,15 +50,11 @@
 </dependencies>]]></source>
             <p>then, just configure it in the mapper XML</p>
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-
   <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
-
   ...
-
 </mapper>]]></source>
             <p>You can also provide values for parameters that can be modified dynamically at runtime:</p>
 <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-
   <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
     <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
     <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
@@ -67,15 +63,11 @@
     <property name="memoryStoreEvictionPolicy" value="LRU"/>
   </cache>
   ...
-
 </mapper>]]></source>
             <p>If users need to log cache operations, they can plug the Cache logging version:</p>
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-
   <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
-
   ...
-
 </mapper>]]></source>
             <p>Users that need to configure EHCache through XML configuration file, have to
   put in the classpath the <code>/ehcache.xml</code> resource; please refeer to the
