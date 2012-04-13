@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2010-2011 The myBatis Team Licensed under the Apache License, 
-	Version 2.0 (the "License"); you may not use this file except in compliance 
-	with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
-	Unless required by applicable law or agreed to in writing, software distributed 
-	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
-	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
-	the specific language governing permissions and limitations under the License. -->
+<!--
+  Copyright 2010-2012 The MyBatis Team
 
-<!-- version: $Id: changes.xml 3985 2011-10-25 05:08:54Z eduardo.macarron 
-	$ -->
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  version: $Id: pom.xml 5144 2012-04-13 08:17:59Z simone.tripodi $
+-->
 <document xmlns="http://maven.apache.org/changes/1.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
-	<properties>
-		<author>The myBatis Team</author>
-		<title>Changes</title>
-	</properties>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
+  <properties>
+    <author>The myBatis Team</author>
+    <title>Changes</title>
+  </properties>
 
-	<body>
-		<release version="1.0.1" date="TBD" description="1.0.1 release">
-			<action type="update" issue="285">
-				Configure Ehcache directly in Mapper XML
-			</action>
-		</release>
-		<release version="1.0.0" date="2010-12-31" description="1.0.0 release">
-			<action dev="simone.tripodi" type="update">
-				First release.
-			</action>
-		</release>
-	</body>
+  <body>
+    <release version="1.0.1" date="TBD" description="1.0.1 release">
+      <action type="update" issue="285">
+        Configure Ehcache directly in Mapper XML
+      </action>
+    </release>
+    <release version="1.0.0" date="2010-12-31" description="1.0.0 release">
+      <action dev="simone.tripodi" type="update">
+        First release.
+      </action>
+    </release>
+  </body>
 
 </document>
