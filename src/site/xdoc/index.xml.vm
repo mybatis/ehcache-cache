@@ -42,9 +42,9 @@
             <source><![CDATA[<dependencies>
   ...
   <dependency>
-    <groupId>org.mybatis.caches</groupId>
-    <artifactId>mybatis-ehcache</artifactId>
-    <version>X.X.X</version>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>${project.artifactId}</artifactId>
+    <version>${project.version}</version>
   </dependency>
   ...
 </dependencies>]]></source>
