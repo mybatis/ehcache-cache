@@ -44,7 +44,15 @@
     <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
     <site>
       <id>mybatis.site</id>
-      <url>ftp://${mybatis.host}/caches/ehcache/${project.version}</url>
+      <!--
+       | make it overridible, FTP is terribly slow when launched from Maven Wagon
+       | an alternative strategy could be deploying the site locally
+       |
+       |    -Dsite.deploymentUrl=file://...
+       |
+       | then async redeploying it via Filezilla/whatelese
+      -->
+      <url>${site.deploymentUrl}</url>
     </site>
   </distributionManagement>
 
@@ -52,6 +60,10 @@
     <findbugs.onlyAnalyze>org.mybatis.caches.ehcache.*</findbugs.onlyAnalyze>
     <clirr.comparisonVersion>1.0.0</clirr.comparisonVersion>
     <gcu.product>Cache</gcu.product>
+    <!--
+     | see distributionManagement.site.url
+    -->
+    <site.deploymentUrl>ftp://${mybatis.host}/caches/ehcache/</site.deploymentUrl>
   </properties>
 
   <dependencies>
