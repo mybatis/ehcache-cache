@@ -31,14 +31,14 @@
   <artifactId>mybatis-ehcache</artifactId>
   <packaging>jar</packaging>
   <name>MyBatis Caches :: Ehcache</name>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <description>Ehcache support for MyBatis Cache</description>
   <url>http://www.mybatis.org/caches/ehcache/${project.version}</url>
 
   <scm>
-    <url>scm:svn:http://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</url>
-    <connection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</connection>
-    <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</developerConnection>
+    <url>scm:svn:http://mybatis.googlecode.com/svn/sub-projects/caches/tags/mybatis-ehcache-1.0.1</url>
+    <connection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/tags/mybatis-ehcache-1.0.1</connection>
+    <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/tags/mybatis-ehcache-1.0.1</developerConnection>
   </scm>
   <distributionManagement>
     <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
