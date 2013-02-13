@@ -15,6 +15,7 @@
   limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.mybatis</groupId>
@@ -22,14 +23,14 @@
     <version>15</version>
   </parent>
 
-  <modelVersion>4.0.0</modelVersion>
   <groupId>org.mybatis.caches</groupId>
   <artifactId>mybatis-ehcache</artifactId>
-  <packaging>jar</packaging>
-  <name>MyBatis Caches :: Ehcache</name>
   <version>1.0.2-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>MyBatis Caches :: Ehcache</name>
   <description>Ehcache support for MyBatis Cache</description>
-  <url>http://www.mybatis.org/caches/ehcache/${project.version}</url>
+  <url>http://www.mybatis.org/caches/ehcache/</url>
 
   <scm>
     <url>scm:svn:http://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</url>
