@@ -33,9 +33,10 @@
   <url>http://www.mybatis.org/caches/ehcache/</url>
 
   <scm>
-    <url>scm:svn:http://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</url>
-    <connection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</connection>
-    <developerConnection>scm:svn:https://mybatis.googlecode.com/svn/sub-projects/caches/trunk/ehcache</developerConnection>
+    <url>http://github.com/mybatis/ehcache-cache</url>
+    <connection>scm:git:ssh://github.com/mybatis/ehcache-cache.git</connection>
+    <developerConnection>scm:git:git+ssh://git@github.com/mybatis/ehcache-cache.git</developerConnection>
+    <tag>HEAD</tag>
   </scm>
   <distributionManagement>
     <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
