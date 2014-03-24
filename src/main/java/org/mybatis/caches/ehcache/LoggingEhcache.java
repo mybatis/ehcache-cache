@@ -1,5 +1,5 @@
 /*
- *    Copyright 2010-2012 The MyBatis Team
+ *    Copyright 2010-2014 The original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import org.apache.ibatis.cache.decorators.LoggingCache;
 /**
  * {@code LoggingCache} adapter for Ehcache.
  *
- * @version $Id$
+ * @author Simone Tripodi
  */
 public final class LoggingEhcache extends LoggingCache {
 
