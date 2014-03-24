@@ -55,7 +55,7 @@
 
   <properties>
     <findbugs.onlyAnalyze>org.mybatis.caches.ehcache.*</findbugs.onlyAnalyze>
-    <clirr.comparisonVersion>1.0.1</clirr.comparisonVersion>
+    <clirr.comparisonVersion>1.0.2</clirr.comparisonVersion>
     <gcu.product>Cache</gcu.product>
   </properties>
 
@@ -100,37 +100,5 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <arguments>-Prelease,bundle,gupload</arguments>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.2</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>dependencies</report>
-              <report>dependency-convergence</report>
-              <report>index</report>
-              <report>summary</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
 
 </project>
