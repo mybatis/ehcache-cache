@@ -50,12 +50,12 @@
 </dependencies>]]></source>
             <p>then, just configure it in the mapper XML</p>
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-  <cache type="org.mybatis.caches.Ehcache.EhcacheCache"/>
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
   ...
 </mapper>]]></source>
             <p>You can also provide values for parameters that can be modified dynamically at runtime:</p>
 <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-  <cache type="org.mybatis.caches.Ehcache.EhcacheCache"/>
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
     <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
     <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
     <property name="maxEntriesLocalHeap" value="1000"/>
@@ -66,7 +66,7 @@
 </mapper>]]></source>
             <p>If users need to log cache operations, they can plug the Cache logging version:</p>
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-  <cache type="org.mybatis.caches.Ehcache.LoggingEhcache"/>
+  <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
   ...
 </mapper>]]></source>
 
