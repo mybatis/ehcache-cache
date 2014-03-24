@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 The MyBatis Team
+  Copyright 2010-2014 The original author or authors.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,39 +23,39 @@
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>MyBatis EHCache | Reference Documentation</title>
-    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+    <title>MyBatis Ehcache | Reference Documentation</title>
+    <author email="simone.tripodi@gmail.com">Simone Tripodi</author>
   </properties>
 
   <body>
-    <section name="MyBatis EHCache integration - Reference Documentation">
+    <section name="MyBatis Ehcache integration - Reference Documentation">
 
-    <p><a href="http://ehcache.org/">EHCache</a> is a widely used java distributed cache for general purpose caching,
+    <p><a href="http://Ehcache.org/">Ehcache</a> is a widely used java distributed cache for general purpose caching,
             Java EE and light-weight containers.</p>
-            <p>The EHCache integration is built on top of the <code>ehcache-core</code> and comes without
-            any EHCache 3rd part applications. Please refeer to official EHCache
-            <a href="http://ehcache.org/documentation/index.html">documentation</a> if you need plugins.</p>
-            <p>Users that want to use EHCache into their applications, have to download the
-            <a href="http://code.google.com/p/mybatis/downloads/list?q=Product-Cache">zip bundle</a>, decompress it and add the jars in the classpath;
+            <p>The Ehcache integration is built on top of the <code>Ehcache-core</code> and comes without
+            any Ehcache 3rd part applications. Please refeer to official Ehcache
+            <a href="http://Ehcache.org/documentation/index.html">documentation</a> if you need plugins.</p>
+            <p>Users that want to use Ehcache into their applications, have to download the
+            <a href="https://github.com/mybatis/Ehcache-cache/releases">zip bundle</a>, decompress it and add the jars in the classpath;
             Apache Maven users instead can simply add in
             the <code>pom.xml</code> the following dependency:</p>
             <source><![CDATA[<dependencies>
   ...
   <dependency>
-    <groupId>${project.groupId}</groupId>
-    <artifactId>${project.artifactId}</artifactId>
-    <version>${project.version}</version>
+    <groupId>org.mybatis.caches</groupId>
+    <artifactId>mybatis-Ehcache</artifactId>
+    <version>x.x.x</version>
   </dependency>
   ...
 </dependencies>]]></source>
             <p>then, just configure it in the mapper XML</p>
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-  <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+  <cache type="org.mybatis.caches.Ehcache.EhcacheCache"/>
   ...
 </mapper>]]></source>
             <p>You can also provide values for parameters that can be modified dynamically at runtime:</p>
 <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-  <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+  <cache type="org.mybatis.caches.Ehcache.EhcacheCache"/>
     <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
     <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
     <property name="maxEntriesLocalHeap" value="1000"/>
@@ -66,12 +66,13 @@
 </mapper>]]></source>
             <p>If users need to log cache operations, they can plug the Cache logging version:</p>
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-  <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+  <cache type="org.mybatis.caches.Ehcache.LoggingEhcache"/>
   ...
 </mapper>]]></source>
-            <p>Users that need to configure EHCache through XML configuration file, have to
+
+            <p>Users that need to configure Ehcache through XML configuration file, have to
   put in the classpath the <code>/ehcache.xml</code> resource; please refeer to the
-  official EHCache <a href="http://ehcache.org/documentation/configuration.html">documentation</a>
+  official Ehcache <a href="http://Ehcache.org/documentation/configuration.html">documentation</a>
   to know more details.</p>
 
             <p>If the <code>/ehcache.xml</code> resource is not found or something goes
