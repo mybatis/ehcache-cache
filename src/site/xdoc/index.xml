@@ -28,32 +28,36 @@
   </properties>
 
   <body>
-    <section name="MyBatis Ehcache integration - Reference Documentation">
+    <section name="MyBatis Ehcache Adapter - Reference Documentation">
 
-    <p><a href="http://Ehcache.org/">Ehcache</a> is a widely used java distributed cache for general purpose caching,
+            <p><a href="http://ehcache.org/">Ehcache</a> is a widely used java distributed cache for general purpose caching,
             Java EE and light-weight containers.</p>
             <p>The Ehcache integration is built on top of the <code>Ehcache-core</code> and comes without
-            any Ehcache 3rd part applications. Please refeer to official Ehcache
-            <a href="http://Ehcache.org/documentation/index.html">documentation</a> if you need plugins.</p>
+            any Ehcache 3rd part applications. Please refer to official Ehcache
+            <a href="http://ehcache.org/documentation/index.html">documentation</a> if you need plugins.</p>
             <p>Users that want to use Ehcache into their applications, have to download the
-            <a href="https://github.com/mybatis/Ehcache-cache/releases">zip bundle</a>, decompress it and add the jars in the classpath;
-            Apache Maven users instead can simply add in
-            the <code>pom.xml</code> the following dependency:</p>
+            <a href="https://github.com/mybatis/ehcache-cache/releases">zip bundle</a>, decompress it and add the jars in the classpath;
+            Apache Maven users instead can simply add in the <code>pom.xml</code> the following dependency:</p>
+            
             <source><![CDATA[<dependencies>
   ...
   <dependency>
     <groupId>org.mybatis.caches</groupId>
-    <artifactId>mybatis-Ehcache</artifactId>
+    <artifactId>mybatis-ehcache</artifactId>
     <version>x.x.x</version>
   </dependency>
   ...
 </dependencies>]]></source>
+
             <p>then, just configure it in the mapper XML</p>
+            
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
   <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
   ...
 </mapper>]]></source>
+
             <p>You can also provide values for parameters that can be modified dynamically at runtime:</p>
+            
 <source><![CDATA[<mapper namespace="org.acme.FooMapper">
   <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
     <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
@@ -64,19 +68,20 @@
   </cache>
   ...
 </mapper>]]></source>
-            <p>If users need to log cache operations, they can plug the Cache logging version:</p>
+
+            <p>If you need to log cache operations, they can plug the Cache logging version:</p>
+            
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
   <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
   ...
 </mapper>]]></source>
 
             <p>Users that need to configure Ehcache through XML configuration file, have to
-  put in the classpath the <code>/ehcache.xml</code> resource; please refeer to the
-  official Ehcache <a href="http://Ehcache.org/documentation/configuration.html">documentation</a>
-  to know more details.</p>
+               put in the classpath the <code>/ehcache.xml</code> resource; please refer to the
+               official Ehcache <a href="http://Ehcache.org/documentation/configuration.html">documentation</a>
+               to know more details.</p>
 
-            <p>If the <code>/ehcache.xml</code> resource is not found or something goes
-  wrong while loading it, the default configuration will be used.</p>
+            <p>If the <code>/ehcache.xml</code> resource is not found or something goes wrong while loading it, the default configuration will be used.</p>
         </section>
     </body>
 
