@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2012 The MyBatis Team
+  Copyright 2010-2014 The original author or authors.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,14 +27,43 @@
   </properties>
 
   <body>
-    <release version="1.0.1" date="TBD" description="1.0.1 release">
-      <action type="update" issue="285">
-        Configure Ehcache directly in Mapper XML
+    <release version="1.0.4" date="TBD" description="1.0.4 release">
+      <action dev="jeremy.landis" type="update" issue="4">
+        Updated maven xsd redirect - Pull Request 4.
+      </action>
+      <action dev="jeremy.landis" type="update" issue="3">
+        Updated site xsd - Pull Request 3.
+      </action>
+    </release>
+    <release version="1.0.3" date="2014-03-24" description="1.0.3 release">
+      <action dev="eduardo.macarron" type="update" issue="3">
+        No extra locking needed - Pull Request 2.
+      </action>
+    </release>
+    <release version="1.0.2" date="2013-04-25" description="1.0.2 release">
+      <action dev="eduardo.macarron" type="update" issue="668">
+        Mybatis EHcache key collision - Google Code #668.
+      </action>
+    </release>
+    <release version="1.0.1" date="2012-04-12" description="1.0.1 release">
+      <action dev="eduardo.macarron" type="update" issue="246">
+        Wrong package name in documentation - Google Code #246.
+      </action>
+      <action dev="eduardo.macarron" type="update" issue="285">
+        Configure Ehcache directly in Mapper XML - Google Code #285.
       </action>
     </release>
     <release version="1.0.0" date="2010-12-31" description="1.0.0 release">
       <action dev="simone.tripodi" type="update">
         First release.
+      </action>
+      <action dev="hmilysls" type="update" issue="150">
+        Apply Ehcache to mybatis - Google Code #150.
+      </action>
+    </release>
+    <release version="1.0.0-RC1" date="2010-08-19" description="1.0.0-RC1 release">
+      <action dev="simone.tripodi" type="update">
+        First release canidate.
       </action>
     </release>
   </body>

@@ -18,6 +18,12 @@ package org.mybatis.caches.ehcache;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.instanceOf;
+
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +35,7 @@ public final class EhcacheTestCase {
 
     private static final String DEFAULT_ID = "EHCACHE";
 
+    // CacheManager holds any settings between tests
     private EhcacheCache cache;
 
     @Before
@@ -77,10 +84,88 @@ public final class EhcacheTestCase {
     public void shouldChangeTimeToLive() throws Exception {
       cache.putObject("test", "test");
       Thread.sleep(1200);
-      assertEquals(cache.getObject("test"), "test");
+      assertEquals("test", cache.getObject("test"));
       cache.setTimeToLiveSeconds(1);
       Thread.sleep(1200);
       assertNull(cache.getObject("test"));
-  }
+      this.resetCache();
+    }
 
+    @Test
+    public void shouldChangeTimeToIdle() throws Exception {
+      cache.putObject("test", "test");
+      Thread.sleep(1200);
+      assertEquals("test", cache.getObject("test"));
+      cache.setTimeToIdleSeconds(1);
+      Thread.sleep(1200);
+      assertNull(cache.getObject("test"));
+      this.resetCache();
+    }
+
+    @Test
+    public void shouldTestEvictionPolicy() throws Exception {
+      cache.clear();
+      cache.setMemoryStoreEvictionPolicy("FIFO");
+      cache.setMaxEntriesLocalHeap(1);
+      cache.setMaxEntriesLocalDisk(1);
+      cache.putObject("eviction", "eviction");
+      cache.putObject("eviction2", "eviction2");
+      cache.putObject("eviction3", "eviction3");
+      Thread.sleep(1200);
+      assertEquals(1, cache.getSize());
+      this.resetCache();
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void shouldNotCreateCache() {
+      cache = new EhcacheCache(null);
+    }
+
+    @Test
+    public void shouldVerifyCacheId() {
+      assertEquals("EHCACHE", cache.getId());
+    }
+
+    @Test
+    public void shouldVerifyToString() {
+      assertEquals("EHCache {EHCACHE}", cache.toString());
+    }
+
+    @Test
+    public void equalsAndHashCodeSymmetricTest() {
+      // equals and hashCode check name field value
+      EhcacheCache x = new EhcacheCache("EHCACHE");
+      EhcacheCache y = new EhcacheCache("EHCACHE");
+      assertTrue(x.equals(y));
+      assertTrue(y.equals(x));
+      assertEquals(x.hashCode(), y.hashCode());
+      // dummy tests to cover edge cases
+      assertFalse(x.equals(new String()));
+      assertFalse(x.equals(null));
+      assertTrue(x.equals(x));
+    }
+
+    @Test
+    public void shouldVerifyReadWriteLock() throws InterruptedException {
+      assertThat(cache.getReadWriteLock(), instanceOf(DummyReadWriteLock.class));
+      assertTrue(cache.getReadWriteLock().readLock().tryLock());
+      assertTrue(cache.getReadWriteLock().readLock().tryLock(1, TimeUnit.SECONDS));
+      assertNull(cache.getReadWriteLock().readLock().newCondition());
+      assertTrue(cache.getReadWriteLock().writeLock().tryLock());
+      assertTrue(cache.getReadWriteLock().writeLock().tryLock(1, TimeUnit.SECONDS));
+      assertNull(cache.getReadWriteLock().writeLock().newCondition());
+      // Nothing to test, hitting empty code blocks
+      cache.getReadWriteLock().readLock().lock();
+      cache.getReadWriteLock().readLock().lockInterruptibly();
+      cache.getReadWriteLock().readLock().unlock();
+      
+    }
+
+    // CacheManager holds reference to settings, reset this for other tests
+    private void resetCache() {
+        cache.setTimeToLiveSeconds(120);
+        cache.setTimeToIdleSeconds(120);
+        cache.setMemoryStoreEvictionPolicy("LRU");
+    }
+    
 }
