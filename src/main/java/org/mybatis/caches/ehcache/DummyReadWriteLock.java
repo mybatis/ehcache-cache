@@ -38,9 +38,11 @@ class DummyReadWriteLock implements ReadWriteLock {
     static class DummyLock implements Lock {
 
         public void lock() {
+            // Not implemented
         }
 
         public void lockInterruptibly() throws InterruptedException {
+            // Not implemented
         }
 
         public boolean tryLock() {
@@ -52,6 +54,7 @@ class DummyReadWriteLock implements ReadWriteLock {
         }
 
         public void unlock() {
+           // Not implemented
         }
 
         public Condition newCondition() {
