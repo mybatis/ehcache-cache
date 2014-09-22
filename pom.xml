@@ -55,8 +55,8 @@
   </distributionManagement>
 
   <properties>
-    <findbugs.onlyAnalyze>org.mybatis.caches.ehcache.*</findbugs.onlyAnalyze>
     <clirr.comparisonVersion>1.0.3</clirr.comparisonVersion>
+    <findbugs.onlyAnalyze>org.mybatis.caches.ehcache.*</findbugs.onlyAnalyze>
     <gcu.product>Cache</gcu.product>
   </properties>
 
