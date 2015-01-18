@@ -103,7 +103,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>1.7.9</version>
+      <version>1.7.10</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
