@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>22-SNAPSHOT</version>
+    <version>22</version>
   </parent>
 
   <groupId>org.mybatis.caches</groupId>
@@ -31,7 +31,7 @@
 
   <name>mybatis-ehcache</name>
   <description>Ehcache support for MyBatis Cache</description>
-  <url>http://www.mybatis.org/caches/ehcache/</url>
+  <url>https://github.com/mybatis/ehcache-cache/</url>
 
   <scm>
     <url>http://github.com/mybatis/ehcache-cache</url>
