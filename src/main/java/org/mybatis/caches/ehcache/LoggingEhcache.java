@@ -15,17 +15,16 @@
  */
 package org.mybatis.caches.ehcache;
 
-import org.apache.ibatis.cache.decorators.LoggingCache;
-
 /**
- * {@code LoggingCache} adapter for Ehcache.
+ * {@code LoggingCache} Kept for compatibility.
  *
  * @author Simone Tripodi
+ * @deprecated Not needed with MyBatis 3.2.x
  */
-public final class LoggingEhcache extends LoggingCache {
+public final class LoggingEhcache extends EhcacheCache {
 
-    public LoggingEhcache(final String id) {
-        super(new EhcacheCache(id));
-    }
+  public LoggingEhcache(String id) {
+    super(id);
+  }
 
 }

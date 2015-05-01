@@ -36,7 +36,7 @@ public final class EhcacheTestCase {
     private static final String DEFAULT_ID = "EHCACHE";
 
     // CacheManager holds any settings between tests
-    private EhcacheCache cache;
+    private AbstractEhcacheCache cache;
 
     @Before
     public void newCache() {
@@ -134,8 +134,8 @@ public final class EhcacheTestCase {
     @Test
     public void equalsAndHashCodeSymmetricTest() {
       // equals and hashCode check name field value
-      EhcacheCache x = new EhcacheCache("EHCACHE");
-      EhcacheCache y = new EhcacheCache("EHCACHE");
+      AbstractEhcacheCache x = new EhcacheCache("EHCACHE");
+      AbstractEhcacheCache y = new EhcacheCache("EHCACHE");
       assertTrue(x.equals(y));
       assertTrue(y.equals(x));
       assertEquals(x.hashCode(), y.hashCode());
@@ -143,22 +143,6 @@ public final class EhcacheTestCase {
       assertFalse(x.equals(new String()));
       assertFalse(x.equals(null));
       assertTrue(x.equals(x));
-    }
-
-    @Test
-    public void shouldVerifyReadWriteLock() throws InterruptedException {
-      assertThat(cache.getReadWriteLock(), instanceOf(DummyReadWriteLock.class));
-      assertTrue(cache.getReadWriteLock().readLock().tryLock());
-      assertTrue(cache.getReadWriteLock().readLock().tryLock(1, TimeUnit.SECONDS));
-      assertNull(cache.getReadWriteLock().readLock().newCondition());
-      assertTrue(cache.getReadWriteLock().writeLock().tryLock());
-      assertTrue(cache.getReadWriteLock().writeLock().tryLock(1, TimeUnit.SECONDS));
-      assertNull(cache.getReadWriteLock().writeLock().newCondition());
-      // Nothing to test, hitting empty code blocks
-      cache.getReadWriteLock().readLock().lock();
-      cache.getReadWriteLock().readLock().lockInterruptibly();
-      cache.getReadWriteLock().readLock().unlock();
-      
     }
 
     // CacheManager holds reference to settings, reset this for other tests

@@ -68,10 +68,11 @@
   ...
 </mapper>]]></source>
 
-            <p>If you want to log cache statistics plug the logging version:</p>
+            <p>You may need to use a blocking cache. See the details <a href="http://ehcache.org/documentation/2.8/apis/constructs">here</a>.
+            This is how it is configured:</p>
             
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-  <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+  <cache type="org.mybatis.caches.ehcache.EhBlockingCache"/>
   ...
 </mapper>]]></source>
 
