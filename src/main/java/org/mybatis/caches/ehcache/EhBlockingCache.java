@@ -15,8 +15,6 @@
  */
 package org.mybatis.caches.ehcache;
 
-import java.util.concurrent.locks.ReadWriteLock;
-
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.constructs.blocking.BlockingCache;
