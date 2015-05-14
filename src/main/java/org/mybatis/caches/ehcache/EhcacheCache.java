@@ -27,10 +27,10 @@ public class EhcacheCache extends AbstractEhcacheCache {
     this.cache = CACHE_MANAGER.getCache(id);
   }
   
-  public void putObject(Object key, Object value) {
-    if (value != null) {
-      cache.put(new Element(key, value));
-    }
+  @Override
+  public Object removeObject(Object key) {
+    cache.put(new Element(key, null));
+    return null;
   }
 
 }

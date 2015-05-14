@@ -16,7 +16,6 @@
 package org.mybatis.caches.ehcache;
 
 import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
 import net.sf.ehcache.constructs.blocking.BlockingCache;
 
 /**
@@ -34,11 +33,6 @@ public class EhBlockingCache extends AbstractEhcacheCache {
       BlockingCache blockingCache = new BlockingCache(ehcache);
       CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);
     }
-  }
-
-  @Override
-  public void putObject(Object key, Object value) {
-    cache.put(new Element(key, value));
   }
     
 }
