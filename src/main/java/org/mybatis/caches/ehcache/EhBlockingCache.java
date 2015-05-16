@@ -16,6 +16,7 @@
 package org.mybatis.caches.ehcache;
 
 import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
 import net.sf.ehcache.constructs.blocking.BlockingCache;
 
 /**
@@ -34,5 +35,13 @@ public class EhBlockingCache extends AbstractEhcacheCache {
       CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);
     }
   }
-    
+
+  @Override
+  public Object removeObject(Object key) {
+    // this method is called during a rollback just to
+    // release any previous lock
+    cache.put(new Element(key, null));
+    return null;
+  }
+  
 }

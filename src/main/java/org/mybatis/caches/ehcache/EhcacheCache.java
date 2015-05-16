@@ -26,11 +26,5 @@ public class EhcacheCache extends AbstractEhcacheCache {
     }
     this.cache = CACHE_MANAGER.getCache(id);
   }
-  
-  @Override
-  public Object removeObject(Object key) {
-    cache.put(new Element(key, null));
-    return null;
-  }
 
 }
