@@ -15,7 +15,6 @@
  */
 package org.mybatis.caches.ehcache;
 
-import net.sf.ehcache.Element;
 
 public class EhcacheCache extends AbstractEhcacheCache {
 
@@ -24,7 +23,7 @@ public class EhcacheCache extends AbstractEhcacheCache {
     if (!CACHE_MANAGER.cacheExists(id)) {
       CACHE_MANAGER.addCache(id);
     }
-    this.cache = CACHE_MANAGER.getCache(id);
+    this.cache = CACHE_MANAGER.getEhcache(id);
   }
 
 }
