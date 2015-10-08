@@ -1,18 +1,16 @@
 <api>
 <package name="org.mybatis.caches.ehcache"
 >
-<class name="EhcacheCache"
+<class name="AbstractEhcacheCache"
  extends="java.lang.Object"
- abstract="false"
+ abstract="true"
  static="false"
- final="true"
+ final="false"
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="org.apache.ibatis.cache.Cache">
-</implements>
-<constructor name="EhcacheCache"
- type="org.mybatis.caches.ehcache.EhcacheCache"
+<constructor name="AbstractEhcacheCache"
+ type="org.mybatis.caches.ehcache.AbstractEhcacheCache"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -171,13 +169,94 @@
 <parameter name="timeToLiveSeconds" type="long">
 </parameter>
 </method>
-</class>
-<class name="LoggingEhcache"
- extends="org.apache.ibatis.cache.decorators.LoggingCache"
+<method name="unlock"
+ return="void"
  abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="java.lang.Object">
+</parameter>
+</method>
+<field name="CACHE_MANAGER"
+ type="net.sf.ehcache.CacheManager"
+ transient="false"
+ volatile="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="cache"
+ type="net.sf.ehcache.Ehcache"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="id"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
  static="false"
  final="true"
  deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+</class>
+<class name="EhBlockingCache"
+ extends="org.mybatis.caches.ehcache.AbstractEhcacheCache"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="EhBlockingCache"
+ type="org.mybatis.caches.ehcache.EhBlockingCache"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="id" type="java.lang.String">
+</parameter>
+</constructor>
+</class>
+<class name="EhcacheCache"
+ extends="org.mybatis.caches.ehcache.AbstractEhcacheCache"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="EhcacheCache"
+ type="org.mybatis.caches.ehcache.EhcacheCache"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="id" type="java.lang.String">
+</parameter>
+</constructor>
+</class>
+<class name="LoggingEhcache"
+ extends="org.mybatis.caches.ehcache.EhcacheCache"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="deprecated"
  visibility="public"
 >
 <constructor name="LoggingEhcache"

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractEhcacheCache.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis-ehcache</a> &gt; <a href="index.source.html" class="el_package">org.mybatis.caches.ehcache</a> &gt; <span class="el_source">AbstractEhcacheCache.java</span></div><h1>AbstractEhcacheCache.java</h1><pre class="source lang-java linenums">/**
+ *    Copyright 2010-2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.mybatis.caches.ehcache;
+
+import java.util.concurrent.locks.ReadWriteLock;
+
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
+
+import org.apache.ibatis.cache.Cache;
+
+/**
+ * Cache adapter for Ehcache.
+ *
+ * @author Simone Tripodi
+ */
+public abstract class AbstractEhcacheCache implements Cache {
+
+    /**
+     * The cache manager reference.
+     */
+<span class="fc" id="L36">    protected static CacheManager CACHE_MANAGER = CacheManager.create();</span>
+  
+    /**
+     * The cache id (namespace)
+     */
+    protected final String id;
+
+    /**
+     * The cache instance
+     */
+    protected Ehcache cache;
+    
+    /**
+     * @param id
+     */
+<span class="fc" id="L51">    public AbstractEhcacheCache(final String id) {</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (id == null) {</span>
+<span class="fc" id="L53">            throw new IllegalArgumentException(&quot;Cache instances require an ID&quot;);</span>
+        }
+<span class="fc" id="L55">        this.id = id;</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+<span class="fc" id="L62">        cache.removeAll();</span>
+<span class="fc" id="L63">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getId() {
+<span class="fc" id="L69">        return id;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object getObject(Object key) {
+<span class="fc" id="L76">        Element cachedElement = cache.get(key);</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (cachedElement == null) {</span>
+<span class="fc" id="L78">            return null;</span>
+        }
+<span class="fc" id="L80">        return cachedElement.getObjectValue();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getSize() {
+<span class="fc" id="L87">        return cache.getSize();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void putObject(Object key, Object value) {
+<span class="fc" id="L94">        cache.put(new Element(key, value));</span>
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object removeObject(Object key) {
+<span class="fc" id="L101">        Object obj = getObject(key);</span>
+<span class="fc" id="L102">        cache.remove(key);</span>
+<span class="fc" id="L103">        return obj;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void unlock(Object key) {
+<span class="nc" id="L110">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (this == obj) {</span>
+<span class="fc" id="L118">            return true;</span>
+        }
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (obj == null) {</span>
+<span class="fc" id="L121">            return false;</span>
+        }
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (!(obj instanceof Cache)) {</span>
+<span class="fc" id="L124">            return false;</span>
+        }
+
+<span class="fc" id="L127">        Cache otherCache = (Cache) obj;</span>
+<span class="fc" id="L128">        return id.equals(otherCache.getId());</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L136">        return id.hashCode();</span>
+    }
+
+    @Override
+    public ReadWriteLock getReadWriteLock() {
+<span class="nc" id="L141">      return null;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L149">        return &quot;EHCache {&quot;</span>
+<span class="fc" id="L150">                + id</span>
+<span class="fc" id="L151">                + &quot;}&quot;;</span>
+    }
+
+    // DYNAMIC PROPERTIES
+    
+    /**
+     * Sets the time to idle for an element before it expires. Is only used if the element is not eternal.
+     *
+     * @param timeToIdleSeconds the default amount of time to live for an element from its last accessed or modified date
+     */
+    public void setTimeToIdleSeconds(long timeToIdleSeconds) {
+<span class="fc" id="L162">        cache.getCacheConfiguration().setTimeToIdleSeconds(timeToIdleSeconds);</span>
+<span class="fc" id="L163">    }</span>
+
+    /**
+     * Sets the time to idle for an element before it expires. Is only used if the element is not eternal.
+     *
+     * @param timeToLiveSeconds the default amount of time to live for an element from its creation date
+     */
+    public void setTimeToLiveSeconds(long timeToLiveSeconds) {
+<span class="fc" id="L171">        cache.getCacheConfiguration().setTimeToLiveSeconds(timeToLiveSeconds);</span>
+<span class="fc" id="L172">    }</span>
+
+    /**
+     * Sets the maximum objects to be held in memory (0 = no limit).
+     *
+     * @param maxElementsInMemory The maximum number of elements in memory, before they are evicted (0 == no limit)
+     */
+    public void setMaxEntriesLocalHeap(long maxEntriesLocalHeap) {
+<span class="fc" id="L180">        cache.getCacheConfiguration().setMaxEntriesLocalHeap(maxEntriesLocalHeap);</span>
+<span class="fc" id="L181">    }</span>
+
+    /**
+     * Sets the maximum number elements on Disk. 0 means unlimited.
+     *
+     * @param maxElementsOnDisk the maximum number of Elements to allow on the disk. 0 means unlimited.
+     */
+    public void setMaxEntriesLocalDisk(long maxEntriesLocalDisk) {
+<span class="fc" id="L189">        cache.getCacheConfiguration().setMaxEntriesLocalDisk(maxEntriesLocalDisk);</span>
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * Sets the eviction policy. An invalid argument will set it to null.
+     *
+     * @param memoryStoreEvictionPolicy a String representation of the policy. One of &quot;LRU&quot;, &quot;LFU&quot; or &quot;FIFO&quot;.
+     */
+    public void setMemoryStoreEvictionPolicy(String memoryStoreEvictionPolicy) {
+<span class="fc" id="L198">        cache.getCacheConfiguration().setMemoryStoreEvictionPolicy(memoryStoreEvictionPolicy);</span>
+<span class="fc" id="L199">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
