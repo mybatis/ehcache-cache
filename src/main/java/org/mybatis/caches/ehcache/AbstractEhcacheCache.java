@@ -58,6 +58,7 @@ public abstract class AbstractEhcacheCache implements Cache {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void clear() {
         cache.removeAll();
     }
@@ -65,6 +66,7 @@ public abstract class AbstractEhcacheCache implements Cache {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getId() {
         return id;
     }
@@ -72,6 +74,7 @@ public abstract class AbstractEhcacheCache implements Cache {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Object getObject(Object key) {
         Element cachedElement = cache.get(key);
         if (cachedElement == null) {
@@ -83,6 +86,7 @@ public abstract class AbstractEhcacheCache implements Cache {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int getSize() {
         return cache.getSize();
     }
@@ -90,6 +94,7 @@ public abstract class AbstractEhcacheCache implements Cache {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void putObject(Object key, Object value) {
         cache.put(new Element(key, value));
     }
@@ -97,6 +102,7 @@ public abstract class AbstractEhcacheCache implements Cache {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Object removeObject(Object key) {
         Object obj = getObject(key);
         cache.remove(key);
