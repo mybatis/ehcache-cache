@@ -21,6 +21,7 @@ package org.mybatis.caches.ehcache;
  * @author Simone Tripodi
  * @deprecated Not needed with MyBatis 3.2.x
  */
+@Deprecated
 public final class LoggingEhcache extends EhcacheCache {
 
   public LoggingEhcache(String id) {
