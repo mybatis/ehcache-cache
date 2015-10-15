@@ -58,74 +58,80 @@ public abstract class AbstractEhcacheCache implements Cache {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void clear() {
-<span class="fc" id="L62">        cache.removeAll();</span>
-<span class="fc" id="L63">    }</span>
+<span class="fc" id="L63">        cache.removeAll();</span>
+<span class="fc" id="L64">    }</span>
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getId() {
-<span class="fc" id="L69">        return id;</span>
+<span class="fc" id="L71">        return id;</span>
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public Object getObject(Object key) {
-<span class="fc" id="L76">        Element cachedElement = cache.get(key);</span>
-<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (cachedElement == null) {</span>
-<span class="fc" id="L78">            return null;</span>
+<span class="fc" id="L79">        Element cachedElement = cache.get(key);</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (cachedElement == null) {</span>
+<span class="fc" id="L81">            return null;</span>
         }
-<span class="fc" id="L80">        return cachedElement.getObjectValue();</span>
+<span class="fc" id="L83">        return cachedElement.getObjectValue();</span>
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public int getSize() {
-<span class="fc" id="L87">        return cache.getSize();</span>
+<span class="fc" id="L91">        return cache.getSize();</span>
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void putObject(Object key, Object value) {
-<span class="fc" id="L94">        cache.put(new Element(key, value));</span>
-<span class="fc" id="L95">    }</span>
+<span class="fc" id="L99">        cache.put(new Element(key, value));</span>
+<span class="fc" id="L100">    }</span>
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public Object removeObject(Object key) {
-<span class="fc" id="L101">        Object obj = getObject(key);</span>
-<span class="fc" id="L102">        cache.remove(key);</span>
-<span class="fc" id="L103">        return obj;</span>
+<span class="fc" id="L107">        Object obj = getObject(key);</span>
+<span class="fc" id="L108">        cache.remove(key);</span>
+<span class="fc" id="L109">        return obj;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     public void unlock(Object key) {
-<span class="nc" id="L110">    }</span>
+<span class="nc" id="L116">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean equals(Object obj) {
-<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (this == obj) {</span>
-<span class="fc" id="L118">            return true;</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (this == obj) {</span>
+<span class="fc" id="L124">            return true;</span>
         }
-<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (obj == null) {</span>
-<span class="fc" id="L121">            return false;</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (obj == null) {</span>
+<span class="fc" id="L127">            return false;</span>
         }
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (!(obj instanceof Cache)) {</span>
-<span class="fc" id="L124">            return false;</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (!(obj instanceof Cache)) {</span>
+<span class="fc" id="L130">            return false;</span>
         }
 
-<span class="fc" id="L127">        Cache otherCache = (Cache) obj;</span>
-<span class="fc" id="L128">        return id.equals(otherCache.getId());</span>
+<span class="fc" id="L133">        Cache otherCache = (Cache) obj;</span>
+<span class="fc" id="L134">        return id.equals(otherCache.getId());</span>
     }
 
     /**
@@ -133,12 +139,12 @@ public abstract class AbstractEhcacheCache implements Cache {
      */
     @Override
     public int hashCode() {
-<span class="fc" id="L136">        return id.hashCode();</span>
+<span class="fc" id="L142">        return id.hashCode();</span>
     }
 
     @Override
     public ReadWriteLock getReadWriteLock() {
-<span class="nc" id="L141">      return null;</span>
+<span class="nc" id="L147">      return null;</span>
     }
 
     /**
@@ -146,9 +152,9 @@ public abstract class AbstractEhcacheCache implements Cache {
      */
     @Override
     public String toString() {
-<span class="fc" id="L149">        return &quot;EHCache {&quot;</span>
-<span class="fc" id="L150">                + id</span>
-<span class="fc" id="L151">                + &quot;}&quot;;</span>
+<span class="fc" id="L155">        return &quot;EHCache {&quot;</span>
+                + id
+                + &quot;}&quot;;
     }
 
     // DYNAMIC PROPERTIES
@@ -159,8 +165,8 @@ public abstract class AbstractEhcacheCache implements Cache {
      * @param timeToIdleSeconds the default amount of time to live for an element from its last accessed or modified date
      */
     public void setTimeToIdleSeconds(long timeToIdleSeconds) {
-<span class="fc" id="L162">        cache.getCacheConfiguration().setTimeToIdleSeconds(timeToIdleSeconds);</span>
-<span class="fc" id="L163">    }</span>
+<span class="fc" id="L168">        cache.getCacheConfiguration().setTimeToIdleSeconds(timeToIdleSeconds);</span>
+<span class="fc" id="L169">    }</span>
 
     /**
      * Sets the time to idle for an element before it expires. Is only used if the element is not eternal.
@@ -168,8 +174,8 @@ public abstract class AbstractEhcacheCache implements Cache {
      * @param timeToLiveSeconds the default amount of time to live for an element from its creation date
      */
     public void setTimeToLiveSeconds(long timeToLiveSeconds) {
-<span class="fc" id="L171">        cache.getCacheConfiguration().setTimeToLiveSeconds(timeToLiveSeconds);</span>
-<span class="fc" id="L172">    }</span>
+<span class="fc" id="L177">        cache.getCacheConfiguration().setTimeToLiveSeconds(timeToLiveSeconds);</span>
+<span class="fc" id="L178">    }</span>
 
     /**
      * Sets the maximum objects to be held in memory (0 = no limit).
@@ -177,8 +183,8 @@ public abstract class AbstractEhcacheCache implements Cache {
      * @param maxElementsInMemory The maximum number of elements in memory, before they are evicted (0 == no limit)
      */
     public void setMaxEntriesLocalHeap(long maxEntriesLocalHeap) {
-<span class="fc" id="L180">        cache.getCacheConfiguration().setMaxEntriesLocalHeap(maxEntriesLocalHeap);</span>
-<span class="fc" id="L181">    }</span>
+<span class="fc" id="L186">        cache.getCacheConfiguration().setMaxEntriesLocalHeap(maxEntriesLocalHeap);</span>
+<span class="fc" id="L187">    }</span>
 
     /**
      * Sets the maximum number elements on Disk. 0 means unlimited.
@@ -186,8 +192,8 @@ public abstract class AbstractEhcacheCache implements Cache {
      * @param maxElementsOnDisk the maximum number of Elements to allow on the disk. 0 means unlimited.
      */
     public void setMaxEntriesLocalDisk(long maxEntriesLocalDisk) {
-<span class="fc" id="L189">        cache.getCacheConfiguration().setMaxEntriesLocalDisk(maxEntriesLocalDisk);</span>
-<span class="fc" id="L190">    }</span>
+<span class="fc" id="L195">        cache.getCacheConfiguration().setMaxEntriesLocalDisk(maxEntriesLocalDisk);</span>
+<span class="fc" id="L196">    }</span>
 
     /**
      * Sets the eviction policy. An invalid argument will set it to null.
@@ -195,8 +201,8 @@ public abstract class AbstractEhcacheCache implements Cache {
      * @param memoryStoreEvictionPolicy a String representation of the policy. One of &quot;LRU&quot;, &quot;LFU&quot; or &quot;FIFO&quot;.
      */
     public void setMemoryStoreEvictionPolicy(String memoryStoreEvictionPolicy) {
-<span class="fc" id="L198">        cache.getCacheConfiguration().setMemoryStoreEvictionPolicy(memoryStoreEvictionPolicy);</span>
-<span class="fc" id="L199">    }</span>
+<span class="fc" id="L204">        cache.getCacheConfiguration().setMemoryStoreEvictionPolicy(memoryStoreEvictionPolicy);</span>
+<span class="fc" id="L205">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
