@@ -23,9 +23,6 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @version $Id$
- */
 public final class EhcacheTestCase {
 
     private static final String DEFAULT_ID = "EHCACHE";

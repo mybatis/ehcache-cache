@@ -15,7 +15,5 @@
  */
 /**
  * Contains Ehcache support for MyBatis Cache.
- *
- * @version $Id$
  */
 package org.mybatis.caches.ehcache;
