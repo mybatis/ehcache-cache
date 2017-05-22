@@ -108,7 +108,7 @@ public final class EhcacheTestCase {
     this.resetCache();
   }
 
-  @Test (expected = IllegalArgumentException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void shouldNotCreateCache() {
     cache = new EhcacheCache(null);
   }

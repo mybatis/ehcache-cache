@@ -152,9 +152,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public String toString() {
-    return "EHCache {"
-           + id
-           + "}";
+    return "EHCache {" + id + "}";
   }
 
   // DYNAMIC PROPERTIES
