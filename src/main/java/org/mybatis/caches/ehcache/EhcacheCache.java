@@ -17,6 +17,11 @@ package org.mybatis.caches.ehcache;
 
 public class EhcacheCache extends AbstractEhcacheCache {
 
+  /**
+   * Instantiates a new ehcache cache.
+   *
+   * @param id the id
+   */
   public EhcacheCache(String id) {
     super(id);
     if (!CACHE_MANAGER.cacheExists(id)) {
