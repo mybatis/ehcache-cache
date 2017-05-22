@@ -20,12 +20,17 @@ import net.sf.ehcache.Element;
 import net.sf.ehcache.constructs.blocking.BlockingCache;
 
 /**
- * 
- * @author Iwao AVE!
+ * The Class EhBlockingCache.
  *
+ * @author Iwao AVE!
  */
 public class EhBlockingCache extends AbstractEhcacheCache {
 
+  /**
+   * Instantiates a new eh blocking cache.
+   *
+   * @param id the id
+   */
   public EhBlockingCache(final String id) {
     super(id);
     if (!CACHE_MANAGER.cacheExists(id)) {

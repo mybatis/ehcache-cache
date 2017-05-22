@@ -21,10 +21,13 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**
+ * The Class DummyReadWriteLock.
+ *
  * @author Iwao AVE!
  */
 class DummyReadWriteLock implements ReadWriteLock {
 
+  /** The lock. */
   private Lock lock = new DummyLock();
 
   @Override
@@ -37,6 +40,9 @@ class DummyReadWriteLock implements ReadWriteLock {
     return lock;
   }
 
+  /**
+   * The Class DummyLock.
+   */
   static class DummyLock implements Lock {
 
     @Override
