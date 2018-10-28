@@ -1,5 +1,5 @@
 /**
- *    Copyright 2010-2017 the original author or authors.
+ *    Copyright 2010-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,7 +48,8 @@ public abstract class AbstractEhcacheCache implements Cache {
   /**
    * Instantiates a new abstract ehcache cache.
    *
-   * @param id the chache id (namespace)
+   * @param id
+   *          the chache id (namespace)
    */
   public AbstractEhcacheCache(final String id) {
     if (id == null) {
@@ -160,22 +161,20 @@ public abstract class AbstractEhcacheCache implements Cache {
   // DYNAMIC PROPERTIES
 
   /**
-   * Sets the time to idle for an element before it expires. Is only used
-   * if the element is not eternal.
+   * Sets the time to idle for an element before it expires. Is only used if the element is not eternal.
    *
-   * @param timeToIdleSeconds the default amount of time to live for an
-   *        element from its last accessed or modified date
+   * @param timeToIdleSeconds
+   *          the default amount of time to live for an element from its last accessed or modified date
    */
   public void setTimeToIdleSeconds(long timeToIdleSeconds) {
     cache.getCacheConfiguration().setTimeToIdleSeconds(timeToIdleSeconds);
   }
 
   /**
-   * Sets the time to idle for an element before it expires. Is only used
-   * if the element is not eternal.
+   * Sets the time to idle for an element before it expires. Is only used if the element is not eternal.
    *
-   * @param timeToLiveSeconds the default amount of time to live for an
-   *        element from its creation date
+   * @param timeToLiveSeconds
+   *          the default amount of time to live for an element from its creation date
    */
   public void setTimeToLiveSeconds(long timeToLiveSeconds) {
     cache.getCacheConfiguration().setTimeToLiveSeconds(timeToLiveSeconds);
@@ -184,8 +183,8 @@ public abstract class AbstractEhcacheCache implements Cache {
   /**
    * Sets the maximum objects to be held in memory (0 = no limit).
    *
-   * @param maxEntriesLocalHeap The maximum number of elements in
-   *        heap, before they are evicted (0 == no limit)
+   * @param maxEntriesLocalHeap
+   *          The maximum number of elements in heap, before they are evicted (0 == no limit)
    */
   public void setMaxEntriesLocalHeap(long maxEntriesLocalHeap) {
     cache.getCacheConfiguration().setMaxEntriesLocalHeap(maxEntriesLocalHeap);
@@ -194,8 +193,8 @@ public abstract class AbstractEhcacheCache implements Cache {
   /**
    * Sets the maximum number elements on Disk. 0 means unlimited.
    *
-   * @param maxEntriesLocalDisk the maximum number of Elements to
-   *        allow on the disk. 0 means unlimited.
+   * @param maxEntriesLocalDisk
+   *          the maximum number of Elements to allow on the disk. 0 means unlimited.
    */
   public void setMaxEntriesLocalDisk(long maxEntriesLocalDisk) {
     cache.getCacheConfiguration().setMaxEntriesLocalDisk(maxEntriesLocalDisk);
@@ -204,8 +203,8 @@ public abstract class AbstractEhcacheCache implements Cache {
   /**
    * Sets the eviction policy. An invalid argument will set it to null.
    *
-   * @param memoryStoreEvictionPolicy a String representation of
-   *        the policy. One of "LRU", "LFU" or "FIFO".
+   * @param memoryStoreEvictionPolicy
+   *          a String representation of the policy. One of "LRU", "LFU" or "FIFO".
    */
   public void setMemoryStoreEvictionPolicy(String memoryStoreEvictionPolicy) {
     cache.getCacheConfiguration().setMemoryStoreEvictionPolicy(memoryStoreEvictionPolicy);
