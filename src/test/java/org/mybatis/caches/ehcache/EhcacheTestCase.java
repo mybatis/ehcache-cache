@@ -1,5 +1,5 @@
 /**
- *    Copyright 2010-2017 the original author or authors.
+ *    Copyright 2010-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@
  */
 package org.mybatis.caches.ehcache;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public final class EhcacheTestCase {
 
@@ -30,7 +31,7 @@ public final class EhcacheTestCase {
   // CacheManager holds any settings between tests
   private AbstractEhcacheCache cache;
 
-  @Before
+  @BeforeEach
   public void newCache() {
     cache = new EhcacheCache(DEFAULT_ID);
   }
@@ -108,9 +109,11 @@ public final class EhcacheTestCase {
     this.resetCache();
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void shouldNotCreateCache() {
-    cache = new EhcacheCache(null);
+    assertThrows(IllegalArgumentException.class, () -> {
+      cache = new EhcacheCache(null);
+    });
   }
 
   @Test
