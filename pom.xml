@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2010-2018 the original author or authors.
+       Copyright 2010-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -79,8 +79,8 @@
      | compile dependencies
     -->
     <dependency>
-      <groupId>net.sf.ehcache.internal</groupId>
-      <artifactId>ehcache-core</artifactId>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
       <version>2.10.6</version>
       <scope>compile</scope>
     </dependency>
