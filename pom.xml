@@ -58,7 +58,7 @@
   </distributionManagement>
 
   <properties>
-    <clirr.comparisonVersion>1.0.3</clirr.comparisonVersion>
+    <clirr.comparisonVersion>1.1.0</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.mybatis.caches.ehcache.*</findbugs.onlyAnalyze>
     <gcu.product>Cache</gcu.product>
     <module.name>org.mybatis.caches.ehcache</module.name>
@@ -89,9 +89,9 @@
      | trick to fix javadoc generation
     -->
     <dependency>
-      <groupId>javax.transaction</groupId>
-      <artifactId>javax.transaction-api</artifactId>
-      <version>1.3</version>
+      <groupId>jakarta.transaction</groupId>
+      <artifactId>jakarta.transaction-api</artifactId>
+      <version>1.3.3</version>
       <scope>provided</scope>
     </dependency>
 
