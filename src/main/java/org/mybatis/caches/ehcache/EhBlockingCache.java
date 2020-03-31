@@ -1,5 +1,5 @@
 /**
- *    Copyright 2010-2018 the original author or authors.
+ *    Copyright 2010-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public class EhBlockingCache extends AbstractEhcacheCache {
       BlockingCache blockingCache = new BlockingCache(ehcache);
       CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);
     }
+    this.cache = CACHE_MANAGER.getEhcache(id);
   }
 
   @Override
