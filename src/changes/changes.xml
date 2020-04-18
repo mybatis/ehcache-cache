@@ -25,7 +25,17 @@
   </properties>
 
   <body>
-    <release version="1.0.4" date="TBD" description="1.0.4 release">
+    <release version="1.2.1" date="2020-04-18" description="1.2.1 release">
+      <action dev="polopi" type="update" issue="67">
+        Fixes NPE when using EhBlockingCache
+      </action>
+    </release>
+    <release version="1.2.0" date="2019-12-28" description="1.2.0 release">
+      <action dev="jeremy.landis" type="update">
+        Changed to use direct 'ehcache' library at 2.10.6
+      </action>
+    </release>
+    <release version="1.1.0" date="2016-11-27" description="1.1.0 release">
       <action dev="jeremy.landis" type="update" issue="4">
         Updated maven xsd redirect - Pull Request 4.
       </action>
