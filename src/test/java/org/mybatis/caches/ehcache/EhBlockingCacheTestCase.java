@@ -24,16 +24,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public final class EhcacheTestCase {
+public final class EhBlockingCacheTestCase {
 
-  private static final String DEFAULT_ID = "EHCACHE";
+  private static final String DEFAULT_ID = "EHBLOCKINGCACHE";
 
   // CacheManager holds any settings between tests
   private AbstractEhcacheCache cache;
 
   @BeforeEach
   public void newCache() {
-    cache = new EhcacheCache(DEFAULT_ID);
+    cache = new EhBlockingCache(DEFAULT_ID);
   }
 
   @Test
@@ -112,25 +112,25 @@ public final class EhcacheTestCase {
   @Test
   public void shouldNotCreateCache() {
     assertThrows(IllegalArgumentException.class, () -> {
-      cache = new EhcacheCache(null);
+      cache = new EhBlockingCache(null);
     });
   }
 
   @Test
   public void shouldVerifyCacheId() {
-    assertEquals("EHCACHE", cache.getId());
+    assertEquals(DEFAULT_ID, cache.getId());
   }
 
   @Test
   public void shouldVerifyToString() {
-    assertEquals("EHCache {EHCACHE}", cache.toString());
+    assertEquals("EHCache {EHBLOCKINGCACHE}", cache.toString());
   }
 
   @Test
   public void equalsAndHashCodeSymmetricTest() {
     // equals and hashCode check name field value
-    AbstractEhcacheCache x = new EhcacheCache("EHCACHE");
-    AbstractEhcacheCache y = new EhcacheCache("EHCACHE");
+    AbstractEhcacheCache x = new EhBlockingCache(DEFAULT_ID);
+    AbstractEhcacheCache y = new EhBlockingCache(DEFAULT_ID);
     assertTrue(x.equals(y));
     assertTrue(y.equals(x));
     assertEquals(x.hashCode(), y.hashCode());
