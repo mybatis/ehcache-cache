@@ -23,12 +23,12 @@ echo "Current commit detected: ${commit_message}"
 # We build for several JDKs on Travis.
 # Some actions, like analyzing the code (Coveralls) and uploading
 # artifacts on a Maven repository, should only be made for one version.
- 
+
 # If the version is 1.8, then perform the following actions.
 # 1. Notify Coveralls.
 # 2. Deploy site (disabled as solution not complete).
 
-# Paramters
+# Parameters
 # 1. Use -q option to only display Maven errors and warnings.
 # 2. Use --settings to force the usage of our "settings.xml" file.
 
