@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#    Copyright 2010-2019 the original author or authors.
+#    Copyright 2010-2020 the original author or authors.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ if [ $TRAVIS_REPO_SLUG == "mybatis/ehcache-cache" ] && [ "$TRAVIS_PULL_REQUEST" 
 
     # Deploy to site
     # Cannot currently run site this way
-	# ./mvnw site site:deploy -q --settings ./mvn/settings.xml
-	# echo -e "Successfully deploy site under Travis job ${TRAVIS_JOB_NUMBER}"
+    # ./mvnw site site:deploy -q --settings ./mvn/settings.xml
+    # echo -e "Successfully deploy site under Travis job ${TRAVIS_JOB_NUMBER}"
   else
     echo "Java Version does not support additonal activity for travis CI"
   fi
