@@ -15,9 +15,15 @@
  */
 package org.mybatis.caches.ehcache;
 
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
-import net.sf.ehcache.constructs.blocking.BlockingCache;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+
+import org.ehcache.Cache;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.units.EntryUnit;
+import org.ehcache.config.units.MemoryUnit;
 
 /**
  * The Class EhBlockingCache.
@@ -34,20 +40,26 @@ public class EhBlockingCache extends AbstractEhcacheCache {
    */
   public EhBlockingCache(final String id) {
     super(id);
-    if (!CACHE_MANAGER.cacheExists(id)) {
-      CACHE_MANAGER.addCache(this.id);
-      Ehcache ehcache = CACHE_MANAGER.getEhcache(this.id);
-      BlockingCache blockingCache = new BlockingCache(ehcache);
-      CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);
+    if (CACHE_MANAGER.getCache(id, Object.class, Object.class) == null) {
+      CACHE_MANAGER.createCache(this.id, CacheConfigurationBuilder
+          .newCacheConfigurationBuilder(Object.class, Object.class,
+              ResourcePoolsBuilder.newResourcePoolsBuilder().heap(this.maxEntriesLocalHeap, EntryUnit.ENTRIES)
+                  .offheap(this.maxEntriesLocalDisk, MemoryUnit.MB))
+          .withExpiry(ExpiryPolicyBuilder.timeToIdleExpiration(Duration.of(this.timeToIdleSeconds, ChronoUnit.SECONDS)))
+          .withExpiry(
+              ExpiryPolicyBuilder.timeToLiveExpiration(Duration.of(this.timeToLiveSeconds, ChronoUnit.SECONDS))));
+      Cache<Object, Object> ehcache = CACHE_MANAGER.getCache(this.id, Object.class, Object.class);
+      // BlockingCache blockingCache = new BlockingCache(ehcache);
+      // CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);
     }
-    this.cache = CACHE_MANAGER.getEhcache(id);
+    this.cache = CACHE_MANAGER.getCache(id, Object.class, Object.class);
   }
 
   @Override
   public Object removeObject(Object key) {
     // this method is called during a rollback just to
     // release any previous lock
-    cache.put(new Element(key, null));
+    cache.put(key, null);
     return null;
   }
 

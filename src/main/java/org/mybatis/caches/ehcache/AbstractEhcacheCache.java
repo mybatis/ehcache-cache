@@ -17,23 +17,22 @@ package org.mybatis.caches.ehcache;
 
 import java.util.concurrent.locks.ReadWriteLock;
 
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
-
-import org.apache.ibatis.cache.Cache;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.sizeof.SizeOf;
 
 /**
  * Cache adapter for Ehcache.
  *
  * @author Simone Tripodi
  */
-public abstract class AbstractEhcacheCache implements Cache {
+public abstract class AbstractEhcacheCache implements org.apache.ibatis.cache.Cache {
 
   /**
    * The cache manager reference.
    */
-  protected static CacheManager CACHE_MANAGER = CacheManager.create();
+  protected static CacheManager CACHE_MANAGER = CacheManagerBuilder.newCacheManagerBuilder().build(true);
 
   /**
    * The cache id (namespace).
@@ -43,7 +42,13 @@ public abstract class AbstractEhcacheCache implements Cache {
   /**
    * The cache instance.
    */
-  protected Ehcache cache;
+  protected Cache<Object, Object> cache;
+
+  protected long timeToIdleSeconds;
+  protected long timeToLiveSeconds;
+  protected long maxEntriesLocalHeap = 1;
+  protected long maxEntriesLocalDisk = 1;
+  protected String memoryStoreEvictionPolicy;
 
   /**
    * Instantiates a new abstract ehcache cache.
@@ -63,7 +68,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public void clear() {
-    cache.removeAll();
+    cache.clear();
   }
 
   /**
@@ -79,11 +84,11 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public Object getObject(Object key) {
-    Element cachedElement = cache.get(key);
+    Object cachedElement = cache.get(key);
     if (cachedElement == null) {
       return null;
     }
-    return cachedElement.getObjectValue();
+    return cachedElement;
   }
 
   /**
@@ -91,7 +96,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public int getSize() {
-    return cache.getSize();
+    return (int) SizeOf.newInstance().deepSizeOf(cache);
   }
 
   /**
@@ -99,7 +104,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public void putObject(Object key, Object value) {
-    cache.put(new Element(key, value));
+    cache.put(key, value);
   }
 
   /**
@@ -133,8 +138,8 @@ public abstract class AbstractEhcacheCache implements Cache {
       return false;
     }
 
-    Cache otherCache = (Cache) obj;
-    return id.equals(otherCache.getId());
+    Cache<Object, Object> otherCache = (Cache<Object, Object>) obj;
+    return id.equals(otherCache.get(id));
   }
 
   /**
@@ -167,7 +172,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    *          the default amount of time to live for an element from its last accessed or modified date
    */
   public void setTimeToIdleSeconds(long timeToIdleSeconds) {
-    cache.getCacheConfiguration().setTimeToIdleSeconds(timeToIdleSeconds);
+    this.timeToIdleSeconds = timeToIdleSeconds;
   }
 
   /**
@@ -177,7 +182,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    *          the default amount of time to live for an element from its creation date
    */
   public void setTimeToLiveSeconds(long timeToLiveSeconds) {
-    cache.getCacheConfiguration().setTimeToLiveSeconds(timeToLiveSeconds);
+    this.timeToLiveSeconds = timeToLiveSeconds;
   }
 
   /**
@@ -187,7 +192,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    *          The maximum number of elements in heap, before they are evicted (0 == no limit)
    */
   public void setMaxEntriesLocalHeap(long maxEntriesLocalHeap) {
-    cache.getCacheConfiguration().setMaxEntriesLocalHeap(maxEntriesLocalHeap);
+    this.maxEntriesLocalHeap = maxEntriesLocalHeap;
   }
 
   /**
@@ -197,7 +202,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    *          the maximum number of Elements to allow on the disk. 0 means unlimited.
    */
   public void setMaxEntriesLocalDisk(long maxEntriesLocalDisk) {
-    cache.getCacheConfiguration().setMaxEntriesLocalDisk(maxEntriesLocalDisk);
+    this.maxEntriesLocalDisk = maxEntriesLocalDisk;
   }
 
   /**
@@ -207,7 +212,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    *          a String representation of the policy. One of "LRU", "LFU" or "FIFO".
    */
   public void setMemoryStoreEvictionPolicy(String memoryStoreEvictionPolicy) {
-    cache.getCacheConfiguration().setMemoryStoreEvictionPolicy(memoryStoreEvictionPolicy);
+    this.memoryStoreEvictionPolicy = memoryStoreEvictionPolicy;
   }
 
 }
