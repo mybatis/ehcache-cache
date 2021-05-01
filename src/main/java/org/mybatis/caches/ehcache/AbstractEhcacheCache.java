@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
+import org.ehcache.Cache.Entry;
 import org.ehcache.PersistentCacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
@@ -157,7 +158,7 @@ public abstract class AbstractEhcacheCache implements Cache {
   @Override
   public int getSize() {
     int count = 0;
-    for (org.ehcache.Cache.Entry<Object, Object> ignored : getOrCreateCache()) {
+    for (Entry<Object, Object> ignored : getOrCreateCache()) {
       count++;
     }
     return count;
