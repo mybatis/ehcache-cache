@@ -16,16 +16,15 @@
 package org.mybatis.caches.ehcache;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public final class EhcacheTest {
+class EhcacheTest {
 
   private static final String DEFAULT_ID = "EHCACHE";
 
@@ -33,12 +32,12 @@ public final class EhcacheTest {
   private AbstractEhcacheCache cache;
 
   @BeforeEach
-  public void newCache() {
+  void newCache() {
     cache = new EhcacheCache(DEFAULT_ID);
   }
 
   @Test
-  public void shouldDemonstrateHowAllObjectsAreKept() {
+  void shouldDemonstrateHowAllObjectsAreKept() {
     for (int i = 0; i < 100000; i++) {
       cache.putObject(i, i);
       assertEquals(i, cache.getObject(i));
@@ -47,7 +46,7 @@ public final class EhcacheTest {
   }
 
   @Test
-  public void shouldDemonstrateCopiesAreEqual() {
+  void shouldDemonstrateCopiesAreEqual() {
     for (int i = 0; i < 1000; i++) {
       cache.putObject(i, i);
       assertEquals(i, cache.getObject(i));
@@ -55,7 +54,7 @@ public final class EhcacheTest {
   }
 
   @Test
-  public void shouldRemoveItemOnDemand() {
+  void shouldRemoveItemOnDemand() {
     cache.putObject(0, 0);
     assertNotNull(cache.getObject(0));
     cache.removeObject(0);
@@ -63,7 +62,7 @@ public final class EhcacheTest {
   }
 
   @Test
-  public void shouldFlushAllItemsOnDemand() {
+  void shouldFlushAllItemsOnDemand() {
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
@@ -75,7 +74,7 @@ public final class EhcacheTest {
   }
 
   @Test
-  public void shouldChangeTimeToLive() throws Exception {
+  void shouldChangeTimeToLive() throws Exception {
     cache.putObject("test", "test");
     Thread.sleep(1200);
     assertEquals("test", cache.getObject("test"));
@@ -86,7 +85,7 @@ public final class EhcacheTest {
   }
 
   @Test
-  public void shouldChangeTimeToIdle() throws Exception {
+  void shouldChangeTimeToIdle() throws Exception {
     cache.putObject("test", "test");
     Thread.sleep(1200);
     assertEquals("test", cache.getObject("test"));
@@ -97,7 +96,7 @@ public final class EhcacheTest {
   }
 
   @Test
-  public void shouldTestEvictionPolicy() throws Exception {
+  void shouldTestEvictionPolicy() throws Exception {
     cache.clear();
     cache.setMemoryStoreEvictionPolicy("FIFO");
     cache.setMaxEntriesLocalHeap(1);
@@ -111,34 +110,34 @@ public final class EhcacheTest {
   }
 
   @Test
-  public void shouldNotCreateCache() {
+  void shouldNotCreateCache() {
     assertThrows(IllegalArgumentException.class, () -> {
       cache = new EhcacheCache(null);
     });
   }
 
   @Test
-  public void shouldVerifyCacheId() {
+  void shouldVerifyCacheId() {
     assertEquals("EHCACHE", cache.getId());
   }
 
   @Test
-  public void shouldVerifyToString() {
+  void shouldVerifyToString() {
     assertEquals("EHCache {EHCACHE}", cache.toString());
   }
 
   @Test
-  public void equalsAndHashCodeSymmetricTest() {
+  void equalsAndHashCodeSymmetricTest() {
     // equals and hashCode check name field value
     AbstractEhcacheCache x = new EhcacheCache("EHCACHE");
     AbstractEhcacheCache y = new EhcacheCache("EHCACHE");
-    assertTrue(x.equals(y));
-    assertTrue(y.equals(x));
+    assertEquals(x, y);
+    assertEquals(y, x);
     assertEquals(x.hashCode(), y.hashCode());
     // dummy tests to cover edge cases
-    assertFalse(x.equals(new String()));
-    assertFalse(x.equals(null));
-    assertTrue(x.equals(x));
+    assertNotEquals(x, new String());
+    assertNotNull(x);
+    assertEquals(x, x);
   }
 
   // CacheManager holds reference to settings, reset this for other tests
