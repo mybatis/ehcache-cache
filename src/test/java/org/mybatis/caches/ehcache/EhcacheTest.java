@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public final class EhcacheTestCase {
+public final class EhcacheTest {
 
   private static final String DEFAULT_ID = "EHCACHE";
 
