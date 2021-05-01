@@ -15,6 +15,15 @@
  */
 package org.mybatis.caches.ehcache;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.units.EntryUnit;
+import org.ehcache.config.units.MemoryUnit;
+
 public class EhcacheCache extends AbstractEhcacheCache {
 
   /**
@@ -25,10 +34,16 @@ public class EhcacheCache extends AbstractEhcacheCache {
    */
   public EhcacheCache(String id) {
     super(id);
-    if (!CACHE_MANAGER.cacheExists(id)) {
-      CACHE_MANAGER.addCache(id);
+    if (CACHE_MANAGER.getCache(id, Object.class, Object.class) == null) {
+      CACHE_MANAGER.createCache(this.id, CacheConfigurationBuilder
+          .newCacheConfigurationBuilder(Object.class, Object.class,
+              ResourcePoolsBuilder.newResourcePoolsBuilder().heap(this.maxEntriesLocalHeap, EntryUnit.ENTRIES)
+                  .offheap(this.maxEntriesLocalDisk, MemoryUnit.MB))
+          .withExpiry(ExpiryPolicyBuilder.timeToIdleExpiration(Duration.of(this.timeToIdleSeconds, ChronoUnit.SECONDS)))
+          .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.of(this.timeToLiveSeconds, ChronoUnit.SECONDS)))
+          .withKeySerializer(ObjectSerializer.class).withValueSerializer(ObjectSerializer.class));
     }
-    this.cache = CACHE_MANAGER.getEhcache(id);
+    this.cache = CACHE_MANAGER.getCache(id, Object.class, Object.class);
   }
 
 }
