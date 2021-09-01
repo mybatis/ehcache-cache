@@ -22,13 +22,18 @@ jobs:
   build:
     if: github.repository_owner == 'mybatis'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        java: [8]
+        distribution: ['zulu']
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK
+      - name: Set up JDK ${{ matrix.java }} ${{ matrix.distribution }}
         uses: actions/setup-java@v2
         with:
-          java-version: 8
-          distribution: adopt
+          java-version: ${{ matrix.java }}
+          distribution: ${{ matrix.distribution }}
       - name: Report Coverage to Coveralls for Pull Requests
         if: github.event_name == 'pull_request'
         run: ./mvnw test jacoco:report coveralls:report -q -Dlicense.skip=true -DrepoToken=$GITHUB_TOKEN -DserviceName=github -DpullRequest=$PR_NUMBER
