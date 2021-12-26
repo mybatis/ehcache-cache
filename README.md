@@ -1,7 +1,7 @@
 MyBatis Ehcache Extension
 =========================
 
-[![Build Status](https://travis-ci.org/mybatis/ehcache-cache.svg?branch=master)](https://travis-ci.org/mybatis/ehcache-cache)
+[![Java CI](https://github.com/mybatis/ehcache-cache/actions/workflows/ci.yaml/badge.svg)](https://github.com/mybatis/ehcache-cache/actions/workflows/ci.yaml)
 [![Coverage Status](https://coveralls.io/repos/mybatis/ehcache-cache/badge.svg?branch=master&service=github)](https://coveralls.io/github/mybatis/ehcache-cache?branch=master)
 [![Maven central](https://maven-badges.herokuapp.com/maven-central/org.mybatis.caches/mybatis-ehcache/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.mybatis.caches/mybatis-ehcache)
 [![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/org.mybatis.caches/mybatis-ehcache.svg)](https://oss.sonatype.org/content/repositories/snapshots/org/mybatis/caches/mybatis-ehcache/)
