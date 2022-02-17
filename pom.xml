@@ -46,8 +46,8 @@
     <url>https://github.com/mybatis/ehcache-cache/issues</url>
   </issueManagement>
   <ciManagement>
-    <system>Travis CI</system>
-    <url>https://travis-ci.org/mybatis/ehcache-cache</url>
+    <system>GitHub Actions</system>
+    <url>https://github.com/mybatis/ehcache-cache/actions</url>
   </ciManagement>
   <distributionManagement>
     <site>
