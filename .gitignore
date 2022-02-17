@@ -19,3 +19,4 @@ velocity.log
 /bin
 .mvn/wrapper/maven-wrapper.jar
 .DS_Store
+*.releaseBackup
