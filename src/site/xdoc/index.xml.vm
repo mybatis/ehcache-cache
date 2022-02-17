@@ -30,8 +30,8 @@
 
             <p><a href="http://ehcache.org/">Ehcache</a> is a widely used java distributed cache for general purpose caching,
             Java EE and light-weight containers.</p>
-            <p>The Ehcache integration is built on top of the <code>ehcache-core</code> and comes without any Ehcache 3rd party applications. 
-            Please refer to official Ehcache <a href="http://ehcache.org/documentation/index.html">documentation</a> if you need plugins.</p>
+            <p>The Ehcache integration is built on top of the <code>ehcache</code> and comes without any Ehcache 3rd party applications. 
+            Please refer to official Ehcache <a href="https://www.ehcache.org/documentation/">documentation</a> if you need plugins.</p>
             <p>To use Ehcache in your application download the <a href="https://github.com/mybatis/ehcache-cache/releases">zip bundle</a>, 
             decompress it and add the jars to the classpath.</p>
             <p>If you are using Maven then simply add to your <code>pom.xml</code> the following dependency:</p>
