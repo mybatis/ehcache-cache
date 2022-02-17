@@ -4,4 +4,4 @@ mybatis-ehcache,org.mybatis.caches.ehcache,LoggingEhcache,4,0,0,0,2,0,1,0,1,0
 mybatis-ehcache,org.mybatis.caches.ehcache,EhBlockingCache,0,41,0,2,0,10,0,3,0,2
 mybatis-ehcache,org.mybatis.caches.ehcache,DummyReadWriteLock.DummyLock,12,0,0,0,7,0,7,0,7,0
 mybatis-ehcache,org.mybatis.caches.ehcache,EhcacheCache,0,16,0,2,0,5,0,2,0,1
-mybatis-ehcache,org.mybatis.caches.ehcache,AbstractEhcacheCache,3,128,0,10,2,39,2,21,2,16
+mybatis-ehcache,org.mybatis.caches.ehcache,AbstractEhcacheCache,5,126,1,9,3,38,3,20,2,16
