@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"m":"org.mybatis.caches.ehcache","l":"org.mybatis.caches.ehcache"}]
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.mybatis.caches.ehcache"}];updateSearchResults();
