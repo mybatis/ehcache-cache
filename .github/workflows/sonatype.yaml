@@ -25,20 +25,15 @@ jobs:
   build:
     if: github.repository_owner == 'mybatis' && ! contains(toJSON(github.event.head_commit.message), '[maven-release-plugin]')
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
-        java: [17]
-        distribution: ['zulu']
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK ${{ matrix.java }} ${{ matrix.distribution }}
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: ${{ matrix.java }}
-          distribution: ${{ matrix.distribution }}
+          java-version: 17
+          distribution: zulu
       - name: Deploy to Sonatype
-        run: ./mvnw deploy -DskipTests -B --settings ./.mvn/settings.xml -Dlicense.skip=true
+        run: ./mvnw deploy -DskipTests -B -V --no-transfer-progress --settings ./.mvn/settings.xml -Dlicense.skip=true
         env:
           CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
           CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}
