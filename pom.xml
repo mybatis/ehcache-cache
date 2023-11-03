@@ -30,7 +30,6 @@
   <groupId>org.mybatis.caches</groupId>
   <artifactId>mybatis-ehcache</artifactId>
   <version>1.2.4-SNAPSHOT</version>
-  <packaging>jar</packaging>
 
   <name>mybatis-ehcache</name>
   <description>Ehcache support for MyBatis Cache</description>
@@ -38,7 +37,7 @@
 
   <scm>
     <url>http://github.com/mybatis/ehcache-cache</url>
-    <connection>scm:git:ssh://github.com/mybatis/ehcache-cache.git</connection>
+    <connection>scm:git:ssh://git@github.com/mybatis/ehcache-cache.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/ehcache-cache.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
@@ -52,9 +51,9 @@
   </ciManagement>
   <distributionManagement>
     <site>
-      <id>gh-pages</id>
+      <id>gh-pages-scm</id>
       <name>Mybatis GitHub Pages</name>
-      <url>git:ssh://git@github.com/mybatis/ehcache-cache.git?gh-pages#</url>
+      <url>scm:git:ssh://git@github.com/mybatis/ehcache-cache.git</url>
     </site>
   </distributionManagement>
 
