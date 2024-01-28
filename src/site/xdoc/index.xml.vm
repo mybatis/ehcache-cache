@@ -28,7 +28,7 @@
   <body>
     <section name="MyBatis Ehcache Adapter - Reference Documentation">
 
-            <p><a href="http://ehcache.org/">Ehcache</a> is a widely used java distributed cache for general purpose caching,
+            <p><a href="https://www.ehcache.org/">Ehcache</a> is a widely used java distributed cache for general purpose caching,
             Java EE and light-weight containers.</p>
             <p>The Ehcache integration is built on top of the <code>ehcache</code> and comes without any Ehcache 3rd party applications. 
             Please refer to official Ehcache <a href="https://www.ehcache.org/documentation/">documentation</a> if you need plugins.</p>
@@ -66,7 +66,7 @@
   ...
 </mapper>]]></source>
 
-            <p>You may need to use a blocking cache. See the details <a href="http://ehcache.org/documentation/2.8/apis/constructs">here</a>.
+            <p>You may need to use a blocking cache. See the details <a href="https://www.ehcache.org/generated/2.10.4/html/ehc-all/#page/Ehcache_Documentation_Set%2Fco-bsp_blocking_class.html%23">here</a>.
             This is how it is configured:</p>
             
             <source><![CDATA[<mapper namespace="org.acme.FooMapper">
@@ -75,7 +75,7 @@
 </mapper>]]></source>
 
             <p>Users that need to configure Ehcache through XML configuration file, have to put in the classpath the <code>/ehcache.xml</code> resource.
-               Please refer to the official Ehcache <a href="http://Ehcache.org/documentation/configuration.html">documentation</a> to know more details.</p>
+               Please refer to the official Ehcache <a href="https://www.ehcache.org/generated/2.10.4/html/ehc-all/#page/Ehcache_Documentation_Set%2Fco-cfgbasics_xml_configuration.html%23">documentation</a> to know more details.</p>
 
             <p>If the <code>/ehcache.xml</code> resource is not found or something goes wrong while loading it, the default configuration will be used.</p>
         </section>

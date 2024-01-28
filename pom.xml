@@ -33,13 +33,13 @@
 
   <name>mybatis-ehcache</name>
   <description>Ehcache support for MyBatis Cache</description>
-  <url>https://github.com/mybatis/ehcache-cache/</url>
+  <url>https://www.mybatis.org/ehcache-cache/</url>
 
   <scm>
     <connection>scm:git:ssh://git@github.com/mybatis/ehcache-cache.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/ehcache-cache.git</developerConnection>
     <tag>HEAD</tag>
-    <url>http://github.com/mybatis/ehcache-cache</url>
+    <url>http://github.com/mybatis/ehcache-cache/</url>
   </scm>
   <issueManagement>
     <system>GitHub Issue Management</system>
