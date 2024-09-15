@@ -72,9 +72,6 @@
   </properties>
 
   <dependencies>
-    <!--
-     | Provided dependencies
-    -->
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
@@ -82,9 +79,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!--
-     | compile dependencies
-    -->
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache</artifactId>
@@ -92,9 +86,6 @@
       <scope>compile</scope>
     </dependency>
 
-    <!--
-     | test dependencies
-    -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
