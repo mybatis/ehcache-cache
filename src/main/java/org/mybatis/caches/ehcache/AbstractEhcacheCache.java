@@ -132,7 +132,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public Object getObject(Object key) {
-    Object value = getOrCreateCache().get(key);
+    Object value = getOrCreateCache().get(new HashKeyWrapper(key));
     return value instanceof NullValue ? null : value;
   }
 
@@ -153,7 +153,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public void putObject(Object key, Object value) {
-    getOrCreateCache().put(key, value == null ? NULL_VALUE : value);
+    getOrCreateCache().put(new HashKeyWrapper(key), value == null ? NULL_VALUE : value);
   }
 
   /**
@@ -162,7 +162,7 @@ public abstract class AbstractEhcacheCache implements Cache {
   @Override
   public Object removeObject(Object key) {
     Object obj = getObject(key);
-    getOrCreateCache().remove(key);
+    getOrCreateCache().remove(new HashKeyWrapper(key));
     return obj;
   }
 
