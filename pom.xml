@@ -83,10 +83,18 @@
     </dependency>
 
     <dependency>
-      <groupId>net.sf.ehcache</groupId>
+      <groupId>org.ehcache</groupId>
       <artifactId>ehcache</artifactId>
-      <version>2.10.9.2</version>
+      <version>3.10.8</version>
       <scope>compile</scope>
+      <exclusions>
+        <!-- jaxb-runtime is only needed for XML-based Ehcache configuration which we do not use;
+             its transitive dependencies are hosted on blocked HTTP repositories. -->
+        <exclusion>
+          <groupId>org.glassfish.jaxb</groupId>
+          <artifactId>jaxb-runtime</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>

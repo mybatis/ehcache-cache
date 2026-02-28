@@ -15,6 +15,9 @@
  */
 package org.mybatis.caches.ehcache;
 
+/**
+ * Cache implementation backed by Ehcache 3.
+ */
 public class EhcacheCache extends AbstractEhcacheCache {
 
   /**
@@ -25,10 +28,6 @@ public class EhcacheCache extends AbstractEhcacheCache {
    */
   public EhcacheCache(String id) {
     super(id);
-    if (!CACHE_MANAGER.cacheExists(id)) {
-      CACHE_MANAGER.addCache(id);
-    }
-    this.cache = CACHE_MANAGER.getEhcache(id);
   }
 
 }

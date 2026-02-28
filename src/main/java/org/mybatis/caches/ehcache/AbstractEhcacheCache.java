@@ -15,25 +15,32 @@
  */
 package org.mybatis.caches.ehcache;
 
+import java.io.Serializable;
+import java.time.Duration;
 import java.util.concurrent.locks.ReadWriteLock;
 
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
-
 import org.apache.ibatis.cache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.units.EntryUnit;
 
 /**
- * Cache adapter for Ehcache.
+ * Cache adapter for Ehcache 3.
  *
  * @author Simone Tripodi
  */
 public abstract class AbstractEhcacheCache implements Cache {
 
+  /** Placeholder stored in Ehcache 3 for entries whose actual value is {@code null}. */
+  private static final Object NULL_VALUE = new NullValue();
+
   /**
    * The cache manager reference.
    */
-  protected static CacheManager CACHE_MANAGER = CacheManager.create();
+  protected static CacheManager CACHE_MANAGER = CacheManagerBuilder.newCacheManagerBuilder().build(true);
 
   /**
    * The cache id (namespace).
@@ -41,21 +48,67 @@ public abstract class AbstractEhcacheCache implements Cache {
   protected final String id;
 
   /**
-   * The cache instance.
+   * The cache instance (lazily initialised on first use).
    */
-  protected Ehcache cache;
+  protected org.ehcache.Cache<Object, Object> cache;
+
+  protected long timeToIdleSeconds;
+  protected long timeToLiveSeconds;
+  protected long maxEntriesLocalHeap;
+  protected long maxEntriesLocalDisk;
+  protected String memoryStoreEvictionPolicy;
 
   /**
    * Instantiates a new abstract ehcache cache.
    *
    * @param id
-   *          the chache id (namespace)
+   *          the cache id (namespace)
    */
   public AbstractEhcacheCache(final String id) {
     if (id == null) {
       throw new IllegalArgumentException("Cache instances require an ID");
     }
     this.id = id;
+    // Remove any pre-existing cache so this instance always starts with a fresh default configuration.
+    if (CACHE_MANAGER.getCache(id, Object.class, Object.class) != null) {
+      CACHE_MANAGER.removeCache(id);
+    }
+  }
+
+  /**
+   * Returns the underlying Ehcache 3 cache, creating it on first use with the current configuration.
+   */
+  protected synchronized org.ehcache.Cache<Object, Object> getOrCreateCache() {
+    if (cache == null) {
+      cache = buildAndRegisterCache();
+    }
+    return cache;
+  }
+
+  /**
+   * Builds and registers a new Ehcache 3 cache instance using the current configuration fields.
+   */
+  protected org.ehcache.Cache<Object, Object> buildAndRegisterCache() {
+    if (CACHE_MANAGER.getCache(id, Object.class, Object.class) != null) {
+      CACHE_MANAGER.removeCache(id);
+    }
+    long heapEntries = maxEntriesLocalHeap > 0 ? maxEntriesLocalHeap : Long.MAX_VALUE / 2;
+    CacheConfigurationBuilder<Object, Object> builder = CacheConfigurationBuilder
+        .newCacheConfigurationBuilder(Object.class, Object.class,
+            ResourcePoolsBuilder.newResourcePoolsBuilder().heap(heapEntries, EntryUnit.ENTRIES))
+        .withExpiry(buildExpiryPolicy());
+    CACHE_MANAGER.createCache(id, builder.build());
+    return CACHE_MANAGER.getCache(id, Object.class, Object.class);
+  }
+
+  private org.ehcache.expiry.ExpiryPolicy<Object, Object> buildExpiryPolicy() {
+    if (timeToLiveSeconds > 0) {
+      return ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofSeconds(timeToLiveSeconds));
+    }
+    if (timeToIdleSeconds > 0) {
+      return ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofSeconds(timeToIdleSeconds));
+    }
+    return ExpiryPolicyBuilder.noExpiration();
   }
 
   /**
@@ -63,7 +116,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public void clear() {
-    cache.removeAll();
+    getOrCreateCache().clear();
   }
 
   /**
@@ -79,11 +132,8 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public Object getObject(Object key) {
-    Element cachedElement = cache.get(key);
-    if (cachedElement == null) {
-      return null;
-    }
-    return cachedElement.getObjectValue();
+    Object value = getOrCreateCache().get(key);
+    return value instanceof NullValue ? null : value;
   }
 
   /**
@@ -91,7 +141,11 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public int getSize() {
-    return cache.getSize();
+    int count = 0;
+    for (org.ehcache.Cache.Entry<Object, Object> ignored : getOrCreateCache()) {
+      count++;
+    }
+    return count;
   }
 
   /**
@@ -99,7 +153,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   @Override
   public void putObject(Object key, Object value) {
-    cache.put(new Element(key, value));
+    getOrCreateCache().put(key, value == null ? NULL_VALUE : value);
   }
 
   /**
@@ -108,7 +162,7 @@ public abstract class AbstractEhcacheCache implements Cache {
   @Override
   public Object removeObject(Object key) {
     Object obj = getObject(key);
-    cache.remove(key);
+    getOrCreateCache().remove(key);
     return obj;
   }
 
@@ -161,33 +215,39 @@ public abstract class AbstractEhcacheCache implements Cache {
   // DYNAMIC PROPERTIES
 
   /**
-   * Sets the time to idle for an element before it expires. Is only used if the element is not eternal.
+   * Sets the time to idle for an element before it expires. Is only used if the element is not eternal. If the cache
+   * has already been initialised the configuration change takes effect immediately by recreating the cache.
    *
    * @param timeToIdleSeconds
    *          the default amount of time to live for an element from its last accessed or modified date
    */
   public void setTimeToIdleSeconds(long timeToIdleSeconds) {
-    cache.getCacheConfiguration().setTimeToIdleSeconds(timeToIdleSeconds);
+    this.timeToIdleSeconds = timeToIdleSeconds;
+    recreateCacheIfInitialized();
   }
 
   /**
-   * Sets the time to idle for an element before it expires. Is only used if the element is not eternal.
+   * Sets the time to live for an element before it expires. Is only used if the element is not eternal. If the cache
+   * has already been initialised the configuration change takes effect immediately by recreating the cache.
    *
    * @param timeToLiveSeconds
    *          the default amount of time to live for an element from its creation date
    */
   public void setTimeToLiveSeconds(long timeToLiveSeconds) {
-    cache.getCacheConfiguration().setTimeToLiveSeconds(timeToLiveSeconds);
+    this.timeToLiveSeconds = timeToLiveSeconds;
+    recreateCacheIfInitialized();
   }
 
   /**
-   * Sets the maximum objects to be held in memory (0 = no limit).
+   * Sets the maximum objects to be held in memory (0 = no limit). If the cache has already been initialised the
+   * configuration change takes effect immediately by recreating the cache.
    *
    * @param maxEntriesLocalHeap
    *          The maximum number of elements in heap, before they are evicted (0 == no limit)
    */
   public void setMaxEntriesLocalHeap(long maxEntriesLocalHeap) {
-    cache.getCacheConfiguration().setMaxEntriesLocalHeap(maxEntriesLocalHeap);
+    this.maxEntriesLocalHeap = maxEntriesLocalHeap;
+    recreateCacheIfInitialized();
   }
 
   /**
@@ -197,17 +257,37 @@ public abstract class AbstractEhcacheCache implements Cache {
    *          the maximum number of Elements to allow on the disk. 0 means unlimited.
    */
   public void setMaxEntriesLocalDisk(long maxEntriesLocalDisk) {
-    cache.getCacheConfiguration().setMaxEntriesLocalDisk(maxEntriesLocalDisk);
+    this.maxEntriesLocalDisk = maxEntriesLocalDisk;
+    recreateCacheIfInitialized();
   }
 
   /**
-   * Sets the eviction policy. An invalid argument will set it to null.
+   * Sets the eviction policy. Stored for informational purposes; Ehcache 3 manages its own eviction strategy.
    *
    * @param memoryStoreEvictionPolicy
    *          a String representation of the policy. One of "LRU", "LFU" or "FIFO".
    */
   public void setMemoryStoreEvictionPolicy(String memoryStoreEvictionPolicy) {
-    cache.getCacheConfiguration().setMemoryStoreEvictionPolicy(memoryStoreEvictionPolicy);
+    this.memoryStoreEvictionPolicy = memoryStoreEvictionPolicy;
+    recreateCacheIfInitialized();
+  }
+
+  /**
+   * Recreates the underlying Ehcache 3 cache with the current configuration if the cache has already been initialised.
+   * Called by property setters when a configuration change is requested after first use.
+   */
+  protected synchronized void recreateCacheIfInitialized() {
+    if (cache != null) {
+      cache = buildAndRegisterCache();
+    }
+  }
+
+  /**
+   * Placeholder used to represent a cached {@code null} value. Ehcache 3 does not permit null values, so this sentinel
+   * is stored and translated back to {@code null} on retrieval.
+   */
+  private static final class NullValue implements Serializable {
+    private static final long serialVersionUID = 1L;
   }
 
 }
