@@ -110,6 +110,43 @@ class EhBlockingCacheTest {
   }
 
   @Test
+  void shouldSetMaxBytesLocalDisk() {
+    // Use a distinct cache ID to avoid interfering with the shared EHBLOCKINGCACHE used by other tests.
+    // setMaxBytesLocalDisk triggers a cache rebuild because Ehcache 2 does not allow enabling
+    // the byte-based disk pool on an already-running cache instance. The rebuild re-applies the
+    // BlockingCache decorator so locking semantics are preserved.
+    AbstractEhcacheCache diskCache = new EhBlockingCache("EHBLOCKINGCACHE_DISK_TEST");
+    try {
+      diskCache.setMaxBytesLocalDisk(10 * 1024 * 1024L); // 10 MB
+      assertEquals(10 * 1024 * 1024L, diskCache.cache.getCacheConfiguration().getMaxBytesLocalDisk());
+      assertEquals(0, diskCache.cache.getCacheConfiguration().getMaxEntriesLocalDisk());
+      diskCache.putObject("key", "value");
+      assertEquals("value", diskCache.getObject("key"));
+    } finally {
+      AbstractEhcacheCache.CACHE_MANAGER.removeCache("EHBLOCKINGCACHE_DISK_TEST");
+    }
+  }
+
+  @Test
+  void shouldSupportDiskOverflow() {
+    // Use a distinct cache ID to avoid interfering with the shared EHBLOCKINGCACHE used by other tests.
+    AbstractEhcacheCache diskCache = new EhBlockingCache("EHBLOCKINGCACHE_DISK_OVERFLOW_TEST");
+    try {
+      diskCache.setMaxEntriesLocalHeap(1); // limit heap to 1 entry so others overflow to disk
+      diskCache.setMaxBytesLocalDisk(10 * 1024 * 1024L); // 10 MB — triggers rebuild with disk tier
+      diskCache.putObject("key1", "value1");
+      diskCache.putObject("key2", "value2"); // key1 overflows to disk
+      diskCache.putObject("key3", "value3"); // key2 overflows to disk
+      // All entries must remain retrievable; heap-evicted entries should be found on disk.
+      assertEquals("value1", diskCache.getObject("key1"));
+      assertEquals("value2", diskCache.getObject("key2"));
+      assertEquals("value3", diskCache.getObject("key3"));
+    } finally {
+      AbstractEhcacheCache.CACHE_MANAGER.removeCache("EHBLOCKINGCACHE_DISK_OVERFLOW_TEST");
+    }
+  }
+
+  @Test
   void shouldNotCreateCache() {
     assertThrows(IllegalArgumentException.class, () -> {
       cache = new EhBlockingCache(null);
