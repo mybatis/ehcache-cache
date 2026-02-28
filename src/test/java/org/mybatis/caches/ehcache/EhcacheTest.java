@@ -110,6 +110,24 @@ class EhcacheTest {
   }
 
   @Test
+  void shouldSetMaxBytesLocalDisk() {
+    // Use a distinct cache ID to avoid interfering with the shared EHCACHE used by other tests.
+    AbstractEhcacheCache diskCache = new EhcacheCache("EHCACHE_DISK_TEST");
+    try {
+      // Setting maxBytesLocalDisk rebuilds the cache with the correct byte-based disk tier.
+      diskCache.setMaxBytesLocalDisk(10 * 1024 * 1024L); // 10 MB
+      assertEquals(10 * 1024 * 1024L, diskCache.cache.getCacheConfiguration().getMaxBytesLocalDisk());
+      // maxEntriesLocalDisk must be 0 (the two settings are mutually exclusive in Ehcache 2).
+      assertEquals(0, diskCache.cache.getCacheConfiguration().getMaxEntriesLocalDisk());
+      // Cache must still be functional after the rebuild.
+      diskCache.putObject("key", "value");
+      assertEquals("value", diskCache.getObject("key"));
+    } finally {
+      AbstractEhcacheCache.CACHE_MANAGER.removeCache("EHCACHE_DISK_TEST");
+    }
+  }
+
+  @Test
   void shouldNotCreateCache() {
     assertThrows(IllegalArgumentException.class, () -> {
       cache = new EhcacheCache(null);

@@ -51,4 +51,20 @@ public class EhBlockingCache extends AbstractEhcacheCache {
     return null;
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Re-wraps the rebuilt cache in a {@link BlockingCache} after replacing it.
+   * </p>
+   */
+  @Override
+  protected void rebuildCacheWith(net.sf.ehcache.config.CacheConfiguration newConfig) {
+    CACHE_MANAGER.removeCache(id);
+    CACHE_MANAGER.addCache(new net.sf.ehcache.Cache(newConfig));
+    Ehcache ehcache = CACHE_MANAGER.getEhcache(id);
+    BlockingCache blockingCache = new BlockingCache(ehcache);
+    CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);
+    this.cache = CACHE_MANAGER.getEhcache(id);
+  }
+
 }
