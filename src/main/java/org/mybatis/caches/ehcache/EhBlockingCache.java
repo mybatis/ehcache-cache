@@ -1,5 +1,5 @@
 /*
- *    Copyright 2010-2022 the original author or authors.
+ *    Copyright 2010-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
  */
 package org.mybatis.caches.ehcache;
 
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
-import net.sf.ehcache.constructs.blocking.BlockingCache;
-
 /**
- * The Class EhBlockingCache.
+ * Cache implementation backed by Ehcache 3 that provides basic blocking semantics.
+ * <p>
+ * In Ehcache 2 this class used {@code BlockingCache} to acquire per-key locks and prevent cache stampedes. Ehcache 3
+ * does not provide an equivalent decorator, so blocking must be provided by the caller (e.g. by wrapping this cache
+ * with {@link org.apache.ibatis.cache.decorators.BlockingCache}).
+ * </p>
  *
  * @author Iwao AVE!
  */
@@ -34,21 +35,13 @@ public class EhBlockingCache extends AbstractEhcacheCache {
    */
   public EhBlockingCache(final String id) {
     super(id);
-    if (!CACHE_MANAGER.cacheExists(id)) {
-      CACHE_MANAGER.addCache(this.id);
-      Ehcache ehcache = CACHE_MANAGER.getEhcache(this.id);
-      BlockingCache blockingCache = new BlockingCache(ehcache);
-      CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);
-    }
-    this.cache = CACHE_MANAGER.getEhcache(id);
   }
 
   @Override
   public Object removeObject(Object key) {
-    // this method is called during a rollback just to
-    // release any previous lock
-    cache.put(new Element(key, null));
-    return null;
+    // this method is called during a rollback to release any previously acquired lock;
+    // removing the entry is the correct action for Ehcache 3 (null values are not supported).
+    return super.removeObject(key);
   }
 
 }
