@@ -16,16 +16,18 @@
 package org.mybatis.caches.ehcache;
 
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
-import org.ehcache.CacheManager;
+import org.ehcache.PersistentCacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.EntryUnit;
+import org.ehcache.config.units.MemoryUnit;
 
 /**
  * Cache adapter for Ehcache 3.
@@ -38,9 +40,13 @@ public abstract class AbstractEhcacheCache implements Cache {
   private static final Object NULL_VALUE = new NullValue();
 
   /**
-   * The cache manager reference.
+   * The cache manager reference. A {@link PersistentCacheManager} is used so that individual caches may optionally
+   * configure a disk tier via {@link #setMaxBytesLocalDisk(long)}.
    */
-  protected static CacheManager CACHE_MANAGER = CacheManagerBuilder.newCacheManagerBuilder().build(true);
+  protected static PersistentCacheManager CACHE_MANAGER = CacheManagerBuilder.newCacheManagerBuilder()
+      .with(
+          CacheManagerBuilder.persistence(Path.of(System.getProperty("java.io.tmpdir"), "ehcache-mybatis").toString()))
+      .build(true);
 
   /**
    * The cache id (namespace).
@@ -56,6 +62,7 @@ public abstract class AbstractEhcacheCache implements Cache {
   protected long timeToLiveSeconds;
   protected long maxEntriesLocalHeap;
   protected long maxEntriesLocalDisk;
+  protected long maxBytesLocalDisk;
   protected String memoryStoreEvictionPolicy;
 
   /**
@@ -93,10 +100,18 @@ public abstract class AbstractEhcacheCache implements Cache {
       CACHE_MANAGER.removeCache(id);
     }
     long heapEntries = maxEntriesLocalHeap > 0 ? maxEntriesLocalHeap : Long.MAX_VALUE / 2;
+    ResourcePoolsBuilder poolsBuilder = ResourcePoolsBuilder.newResourcePoolsBuilder().heap(heapEntries,
+        EntryUnit.ENTRIES);
+    if (maxBytesLocalDisk > 0) {
+      poolsBuilder = poolsBuilder.disk(maxBytesLocalDisk, MemoryUnit.B);
+    }
     CacheConfigurationBuilder<Object, Object> builder = CacheConfigurationBuilder
-        .newCacheConfigurationBuilder(Object.class, Object.class,
-            ResourcePoolsBuilder.newResourcePoolsBuilder().heap(heapEntries, EntryUnit.ENTRIES))
-        .withExpiry(buildExpiryPolicy());
+        .newCacheConfigurationBuilder(Object.class, Object.class, poolsBuilder).withExpiry(buildExpiryPolicy());
+    if (maxBytesLocalDisk > 0) {
+      // Disk and off-heap tiers require a Serializer since entries cannot be stored as object references.
+      // ObjectSerializer uses standard Java serialisation; cached values must implement Serializable.
+      builder = builder.withKeySerializer(ObjectSerializer.class).withValueSerializer(ObjectSerializer.class);
+    }
     CACHE_MANAGER.createCache(id, builder.build());
     return CACHE_MANAGER.getCache(id, Object.class, Object.class);
   }
@@ -252,12 +267,29 @@ public abstract class AbstractEhcacheCache implements Cache {
 
   /**
    * Sets the maximum number elements on Disk. 0 means unlimited.
+   * <p>
+   * Note: this property is retained for compatibility but has no effect in Ehcache 3, which does not support an
+   * entry-count limit for the disk tier. Use {@link #setMaxBytesLocalDisk(long)} to configure disk storage instead.
+   * </p>
    *
    * @param maxEntriesLocalDisk
    *          the maximum number of Elements to allow on the disk. 0 means unlimited.
    */
   public void setMaxEntriesLocalDisk(long maxEntriesLocalDisk) {
     this.maxEntriesLocalDisk = maxEntriesLocalDisk;
+    recreateCacheIfInitialized();
+  }
+
+  /**
+   * Sets the maximum bytes to be used for the disk tier. When greater than zero a disk resource pool is added to the
+   * cache, allowing entries evicted from the heap to overflow to disk. If set to zero (the default) no disk tier is
+   * configured and the cache is heap-only.
+   *
+   * @param maxBytesLocalDisk
+   *          the maximum number of bytes to allocate on disk. 0 means no disk tier (heap-only).
+   */
+  public void setMaxBytesLocalDisk(long maxBytesLocalDisk) {
+    this.maxBytesLocalDisk = maxBytesLocalDisk;
     recreateCacheIfInitialized();
   }
 

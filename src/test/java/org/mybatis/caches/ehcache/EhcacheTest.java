@@ -110,6 +110,19 @@ class EhcacheTest {
   }
 
   @Test
+  void shouldSupportDiskOverflow() {
+    cache.setMaxEntriesLocalHeap(1);
+    cache.setMaxBytesLocalDisk(10 * 1024 * 1024L); // 10 MB
+    cache.putObject("key1", "value1");
+    cache.putObject("key2", "value2");
+    cache.putObject("key3", "value3");
+    // With disk overflow enabled, all entries remain retrievable after heap eviction
+    assertNotNull(cache.getObject("key1"));
+    assertNotNull(cache.getObject("key2"));
+    assertNotNull(cache.getObject("key3"));
+  }
+
+  @Test
   void shouldNotCreateCache() {
     assertThrows(IllegalArgumentException.class, () -> {
       cache = new EhcacheCache(null);
