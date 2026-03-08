@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../apidocs/org/mybatis/caches/ehcache/EhBlockingCache.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2010-2022 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2010-2026 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -23,43 +23,36 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.mybatis.caches.ehcache;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> net.sf.ehcache.Ehcache;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> net.sf.ehcache.Element;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> net.sf.ehcache.constructs.blocking.BlockingCache;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> * The Class EhBlockingCache.</em>
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> * @author Iwao AVE!</em>
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="EhBlockingCache" href="../../../../org/mybatis/caches/ehcache/EhBlockingCache.html#EhBlockingCache">EhBlockingCache</a> <strong class="jxr_keyword">extends</strong> <a name="AbstractEhcacheCache" href="../../../../org/mybatis/caches/ehcache/AbstractEhcacheCache.html#AbstractEhcacheCache">AbstractEhcacheCache</a> {
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment">   * Instantiates a new eh blocking cache.</em>
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment">   * @param id</em>
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment">   *          the id</em>
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">public</strong> <a name="EhBlockingCache" href="../../../../org/mybatis/caches/ehcache/EhBlockingCache.html#EhBlockingCache">EhBlockingCache</a>(<strong class="jxr_keyword">final</strong> String id) {
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">super</strong>(id);
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">if</strong> (!CACHE_MANAGER.cacheExists(id)) {
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>        CACHE_MANAGER.addCache(<strong class="jxr_keyword">this</strong>.id);
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>        Ehcache ehcache = CACHE_MANAGER.getEhcache(<strong class="jxr_keyword">this</strong>.id);
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>        BlockingCache blockingCache = <strong class="jxr_keyword">new</strong> BlockingCache(ehcache);
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>        CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>      }
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">this</strong>.cache = CACHE_MANAGER.getEhcache(id);
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    }
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    @Override
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">public</strong> Object removeObject(Object key) {
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <em class="jxr_comment">// this method is called during a rollback just to</em>
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <em class="jxr_comment">// release any previous lock</em>
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      cache.put(<strong class="jxr_keyword">new</strong> Element(key, <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    }
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>  
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  }
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * Cache implementation backed by Ehcache 3 that provides basic blocking semantics.</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> * In Ehcache 2 this class used {@code BlockingCache} to acquire per-key locks and prevent cache stampedes. Ehcache 3</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> * does not provide an equivalent decorator, so blocking must be provided by the caller (e.g. by wrapping this cache</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> * with {@link org.apache.ibatis.cache.decorators.BlockingCache}).</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment"> * &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> * @author Iwao AVE!</em>
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="EhBlockingCache" href="../../../../org/mybatis/caches/ehcache/EhBlockingCache.html#EhBlockingCache">EhBlockingCache</a> <strong class="jxr_keyword">extends</strong> <a name="AbstractEhcacheCache" href="../../../../org/mybatis/caches/ehcache/AbstractEhcacheCache.html#AbstractEhcacheCache">AbstractEhcacheCache</a> {
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment">   * Instantiates a new eh blocking cache.</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment">   * @param id</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment">   *          the id</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">public</strong> <a name="EhBlockingCache" href="../../../../org/mybatis/caches/ehcache/EhBlockingCache.html#EhBlockingCache">EhBlockingCache</a>(<strong class="jxr_keyword">final</strong> String id) {
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">super</strong>(id);
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>    }
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    @Override
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">public</strong> Object removeObject(Object key) {
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <em class="jxr_comment">// this method is called during a rollback to release any previously acquired lock;</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      <em class="jxr_comment">// removing the entry is the correct action for Ehcache 3 (null values are not supported).</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.removeObject(key);
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>    }
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2010–2026 <a href="https://www.mybatis.org/">MyBatis.org</a></div>

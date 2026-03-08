@@ -63,6 +63,12 @@ loadScripts(document, 'script');</script>
 <li><a href="#CACHE_MANAGER" tabindex="0">CACHE_MANAGER</a></li>
 <li><a href="#id" tabindex="0">id</a></li>
 <li><a href="#cache" tabindex="0">cache</a></li>
+<li><a href="#timeToIdleSeconds" tabindex="0">timeToIdleSeconds</a></li>
+<li><a href="#timeToLiveSeconds" tabindex="0">timeToLiveSeconds</a></li>
+<li><a href="#maxEntriesLocalHeap" tabindex="0">maxEntriesLocalHeap</a></li>
+<li><a href="#maxEntriesLocalDisk" tabindex="0">maxEntriesLocalDisk</a></li>
+<li><a href="#maxBytesLocalDisk" tabindex="0">maxBytesLocalDisk</a></li>
+<li><a href="#memoryStoreEvictionPolicy" tabindex="0">memoryStoreEvictionPolicy</a></li>
 </ol>
 </li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
@@ -72,6 +78,8 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#getOrCreateCache()" tabindex="0">getOrCreateCache()</a></li>
+<li><a href="#buildAndRegisterCache()" tabindex="0">buildAndRegisterCache()</a></li>
 <li><a href="#clear()" tabindex="0">clear()</a></li>
 <li><a href="#getId()" tabindex="0">getId()</a></li>
 <li><a href="#getObject(java.lang.Object)" tabindex="0">getObject(Object)</a></li>
@@ -87,7 +95,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#setTimeToLiveSeconds(long)" tabindex="0">setTimeToLiveSeconds(long)</a></li>
 <li><a href="#setMaxEntriesLocalHeap(long)" tabindex="0">setMaxEntriesLocalHeap(long)</a></li>
 <li><a href="#setMaxEntriesLocalDisk(long)" tabindex="0">setMaxEntriesLocalDisk(long)</a></li>
+<li><a href="#setMaxBytesLocalDisk(long)" tabindex="0">setMaxBytesLocalDisk(long)</a></li>
 <li><a href="#setMemoryStoreEvictionPolicy(java.lang.String)" tabindex="0">setMemoryStoreEvictionPolicy(String)</a></li>
+<li><a href="#recreateCacheIfInitialized()" tabindex="0">recreateCacheIfInitialized()</a></li>
 </ol>
 </li>
 </ol>
@@ -114,7 +124,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">AbstractEhcacheCache</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements org.apache.ibatis.cache.Cache</span></div>
-<div class="block">Cache adapter for Ehcache.</div>
+<div class="block">Cache adapter for Ehcache 3.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>Simone Tripodi</dd>
@@ -132,12 +142,12 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected net.sf.ehcache.Ehcache</code></div>
+<div class="col-first even-row-color"><code>protected org.ehcache.Cache<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#cache" class="member-name-link">cache</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The cache instance.</div>
+<div class="block">The cache instance (lazily initialised on first use).</div>
 </div>
-<div class="col-first odd-row-color"><code>protected static net.sf.ehcache.CacheManager</code></div>
+<div class="col-first odd-row-color"><code>protected static org.ehcache.PersistentCacheManager</code></div>
 <div class="col-second odd-row-color"><code><a href="#CACHE_MANAGER" class="member-name-link">CACHE_MANAGER</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">The cache manager reference.</div>
@@ -147,6 +157,24 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <div class="col-last even-row-color">
 <div class="block">The cache id (namespace).</div>
 </div>
+<div class="col-first odd-row-color"><code>protected long</code></div>
+<div class="col-second odd-row-color"><code><a href="#maxBytesLocalDisk" class="member-name-link">maxBytesLocalDisk</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected long</code></div>
+<div class="col-second even-row-color"><code><a href="#maxEntriesLocalDisk" class="member-name-link">maxEntriesLocalDisk</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected long</code></div>
+<div class="col-second odd-row-color"><code><a href="#maxEntriesLocalHeap" class="member-name-link">maxEntriesLocalHeap</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#memoryStoreEvictionPolicy" class="member-name-link">memoryStoreEvictionPolicy</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected long</code></div>
+<div class="col-second odd-row-color"><code><a href="#timeToIdleSeconds" class="member-name-link">timeToIdleSeconds</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected long</code></div>
+<div class="col-second even-row-color"><code><a href="#timeToLiveSeconds" class="member-name-link">timeToLiveSeconds</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -176,18 +204,28 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"></div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.ehcache.Cache<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildAndRegisterCache()" class="member-name-link">buildAndRegisterCache</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Builds and registers a new Ehcache 3 cache instance using the current configuration fields.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"></div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getId()" class="member-name-link">getId</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"></div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getObject(java.lang.Object)" class="member-name-link">getObject</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getId()" class="member-name-link">getId</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getObject(java.lang.Object)" class="member-name-link">getObject</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected org.ehcache.Cache<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOrCreateCache()" class="member-name-link">getOrCreateCache</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the underlying Ehcache 3 cache, creating it on first use with the current configuration.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/locks/ReadWriteLock.html" title="class or interface in java.util.concurrent.locks" class="external-link">ReadWriteLock</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getReadWriteLock()" class="member-name-link">getReadWriteLock</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -201,9 +239,19 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#putObject(java.lang.Object,java.lang.Object)" class="member-name-link">putObject</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"></div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeObject(java.lang.Object)" class="member-name-link">removeObject</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#recreateCacheIfInitialized()" class="member-name-link">recreateCacheIfInitialized</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Recreates the underlying Ehcache 3 cache with the current configuration if the cache has already been initialised.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeObject(java.lang.Object)" class="member-name-link">removeObject</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMaxBytesLocalDisk(long)" class="member-name-link">setMaxBytesLocalDisk</a><wbr>(long&nbsp;maxBytesLocalDisk)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the maximum bytes to be used for the disk tier.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMaxEntriesLocalDisk(long)" class="member-name-link">setMaxEntriesLocalDisk</a><wbr>(long&nbsp;maxEntriesLocalDisk)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -227,7 +275,7 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTimeToLiveSeconds(long)" class="member-name-link">setTimeToLiveSeconds</a><wbr>(long&nbsp;timeToLiveSeconds)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the time to idle for an element before it expires.</div>
+<div class="block">Sets the time to live for an element before it expires.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -256,8 +304,9 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <section class="detail" id="CACHE_MANAGER">
 <h3>CACHE_MANAGER</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">net.sf.ehcache.CacheManager</span>&nbsp;<span class="element-name">CACHE_MANAGER</span></div>
-<div class="block">The cache manager reference.</div>
+<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">org.ehcache.PersistentCacheManager</span>&nbsp;<span class="element-name">CACHE_MANAGER</span></div>
+<div class="block">The cache manager reference. A <code>PersistentCacheManager</code> is used so that individual caches may optionally
+configure a disk tier via <a href="#setMaxBytesLocalDisk(long)"><code>setMaxBytesLocalDisk(long)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -274,8 +323,56 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <section class="detail" id="cache">
 <h3>cache</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">net.sf.ehcache.Ehcache</span>&nbsp;<span class="element-name">cache</span></div>
-<div class="block">The cache instance.</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">org.ehcache.Cache&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">cache</span></div>
+<div class="block">The cache instance (lazily initialised on first use).</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="timeToIdleSeconds">
+<h3>timeToIdleSeconds</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">timeToIdleSeconds</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="timeToLiveSeconds">
+<h3>timeToLiveSeconds</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">timeToLiveSeconds</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="maxEntriesLocalHeap">
+<h3>maxEntriesLocalHeap</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">maxEntriesLocalHeap</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="maxEntriesLocalDisk">
+<h3>maxEntriesLocalDisk</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">maxEntriesLocalDisk</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="maxBytesLocalDisk">
+<h3>maxBytesLocalDisk</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">maxBytesLocalDisk</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="memoryStoreEvictionPolicy">
+<h3>memoryStoreEvictionPolicy</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">memoryStoreEvictionPolicy</span></div>
 </div>
 </section>
 </li>
@@ -295,7 +392,7 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <div class="block">Instantiates a new abstract ehcache cache.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>id</code> - the chache id (namespace)</dd>
+<dd><code>id</code> - the cache id (namespace)</dd>
 </dl>
 </div>
 </section>
@@ -308,6 +405,24 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getOrCreateCache()">
+<h3>getOrCreateCache</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">org.ehcache.Cache&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">getOrCreateCache</span>()</div>
+<div class="block">Returns the underlying Ehcache 3 cache, creating it on first use with the current configuration.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="buildAndRegisterCache()">
+<h3>buildAndRegisterCache</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">org.ehcache.Cache&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">buildAndRegisterCache</span>()</div>
+<div class="block">Builds and registers a new Ehcache 3 cache instance using the current configuration fields.</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="clear()">
 <h3>clear</h3>
@@ -442,7 +557,8 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <h3>setTimeToIdleSeconds</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setTimeToIdleSeconds</span><wbr><span class="parameters">(long&nbsp;timeToIdleSeconds)</span></div>
-<div class="block">Sets the time to idle for an element before it expires. Is only used if the element is not eternal.</div>
+<div class="block">Sets the time to idle for an element before it expires. Is only used if the element is not eternal. If the cache
+has already been initialised the configuration change takes effect immediately by recreating the cache.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>timeToIdleSeconds</code> - the default amount of time to live for an element from its last accessed or modified date</dd>
@@ -455,7 +571,8 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <h3>setTimeToLiveSeconds</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setTimeToLiveSeconds</span><wbr><span class="parameters">(long&nbsp;timeToLiveSeconds)</span></div>
-<div class="block">Sets the time to idle for an element before it expires. Is only used if the element is not eternal.</div>
+<div class="block">Sets the time to live for an element before it expires. Is only used if the element is not eternal. If the cache
+has already been initialised the configuration change takes effect immediately by recreating the cache.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>timeToLiveSeconds</code> - the default amount of time to live for an element from its creation date</dd>
@@ -468,7 +585,8 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <h3>setMaxEntriesLocalHeap</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMaxEntriesLocalHeap</span><wbr><span class="parameters">(long&nbsp;maxEntriesLocalHeap)</span></div>
-<div class="block">Sets the maximum objects to be held in memory (0 = no limit).</div>
+<div class="block">Sets the maximum objects to be held in memory (0 = no limit). If the cache has already been initialised the
+configuration change takes effect immediately by recreating the cache.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>maxEntriesLocalHeap</code> - The maximum number of elements in heap, before they are evicted (0 == no limit)</dd>
@@ -481,10 +599,29 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <h3>setMaxEntriesLocalDisk</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMaxEntriesLocalDisk</span><wbr><span class="parameters">(long&nbsp;maxEntriesLocalDisk)</span></div>
-<div class="block">Sets the maximum number elements on Disk. 0 means unlimited.</div>
+<div class="block">Sets the maximum number elements on Disk. 0 means unlimited.
+<p>
+Note: this property is retained for compatibility but has no effect in Ehcache 3, which does not support an
+entry-count limit for the disk tier. Use <a href="#setMaxBytesLocalDisk(long)"><code>setMaxBytesLocalDisk(long)</code></a> to configure disk storage instead.
+</p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>maxEntriesLocalDisk</code> - the maximum number of Elements to allow on the disk. 0 means unlimited.</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setMaxBytesLocalDisk(long)">
+<h3>setMaxBytesLocalDisk</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMaxBytesLocalDisk</span><wbr><span class="parameters">(long&nbsp;maxBytesLocalDisk)</span></div>
+<div class="block">Sets the maximum bytes to be used for the disk tier. When greater than zero a disk resource pool is added to the
+cache, allowing entries evicted from the heap to overflow to disk. If set to zero (the default) no disk tier is
+configured and the cache is heap-only.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>maxBytesLocalDisk</code> - the maximum number of bytes to allocate on disk. 0 means no disk tier (heap-only).</dd>
 </dl>
 </div>
 </section>
@@ -494,11 +631,21 @@ implements org.apache.ibatis.cache.Cache</span></div>
 <h3>setMemoryStoreEvictionPolicy</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMemoryStoreEvictionPolicy</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;memoryStoreEvictionPolicy)</span></div>
-<div class="block">Sets the eviction policy. An invalid argument will set it to null.</div>
+<div class="block">Sets the eviction policy. Stored for informational purposes; Ehcache 3 manages its own eviction strategy.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>memoryStoreEvictionPolicy</code> - a String representation of the policy. One of "LRU", "LFU" or "FIFO".</dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="recreateCacheIfInitialized()">
+<h3>recreateCacheIfInitialized</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">recreateCacheIfInitialized</span>()</div>
+<div class="block">Recreates the underlying Ehcache 3 cache with the current configuration if the cache has already been initialised.
+Called by property setters when a configuration change is requested after first use.</div>
 </div>
 </section>
 </li>
