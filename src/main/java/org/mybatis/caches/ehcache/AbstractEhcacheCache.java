@@ -49,7 +49,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    * Instantiates a new abstract ehcache cache.
    *
    * @param id
-   *          the chache id (namespace)
+   *          the cache id (namespace)
    */
   public AbstractEhcacheCache(final String id) {
     if (id == null) {
@@ -198,6 +198,47 @@ public abstract class AbstractEhcacheCache implements Cache {
    */
   public void setMaxEntriesLocalDisk(long maxEntriesLocalDisk) {
     cache.getCacheConfiguration().setMaxEntriesLocalDisk(maxEntriesLocalDisk);
+  }
+
+  /**
+   * Sets the maximum bytes to be used for the disk tier. When greater than zero the cache will overflow to disk when
+   * the heap tier is full.
+   * <p>
+   * In Ehcache 2, {@code maxBytesLocalDisk} and {@code maxEntriesLocalDisk} are mutually exclusive, and the disk pool
+   * type cannot be changed on a running cache instance. This method therefore removes and recreates the underlying
+   * cache with a fresh {@link net.sf.ehcache.config.CacheConfiguration} that applies the requested byte limit while
+   * preserving the other settings (TTI, TTL, heap size, eviction policy) from the current configuration.
+   * </p>
+   *
+   * @param maxBytesLocalDisk
+   *          the maximum number of bytes to allocate on disk. 0 means no disk tier (heap-only).
+   */
+  public void setMaxBytesLocalDisk(long maxBytesLocalDisk) {
+    net.sf.ehcache.config.CacheConfiguration current = cache.getCacheConfiguration();
+    // Build a fresh CacheConfiguration so that onDiskPoolUsage is unset and setMaxBytesLocalDisk
+    // can be applied without triggering the "can't switch disk pool" guard in Ehcache 2.
+    net.sf.ehcache.config.CacheConfiguration newConfig = new net.sf.ehcache.config.CacheConfiguration(id,
+        (int) current.getMaxEntriesLocalHeap());
+    newConfig.setTimeToIdleSeconds(current.getTimeToIdleSeconds());
+    newConfig.setTimeToLiveSeconds(current.getTimeToLiveSeconds());
+    newConfig.setEternal(current.isEternal());
+    newConfig.setMemoryStoreEvictionPolicy(current.getMemoryStoreEvictionPolicy().toString());
+    newConfig.setMaxBytesLocalDisk(maxBytesLocalDisk);
+    rebuildCacheWith(newConfig);
+  }
+
+  /**
+   * Removes the existing cache from the {@link CacheManager} and registers a new one built from {@code newConfig}.
+   * Subclasses may override this method to apply additional decorators (e.g.
+   * {@link net.sf.ehcache.constructs.blocking.BlockingCache}).
+   *
+   * @param newConfig
+   *          the configuration to use for the replacement cache
+   */
+  protected void rebuildCacheWith(net.sf.ehcache.config.CacheConfiguration newConfig) {
+    CACHE_MANAGER.removeCache(id);
+    CACHE_MANAGER.addCache(new net.sf.ehcache.Cache(newConfig));
+    this.cache = CACHE_MANAGER.getEhcache(id);
   }
 
   /**

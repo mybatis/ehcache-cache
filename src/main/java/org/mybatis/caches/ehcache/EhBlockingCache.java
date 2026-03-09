@@ -20,7 +20,11 @@ import net.sf.ehcache.Element;
 import net.sf.ehcache.constructs.blocking.BlockingCache;
 
 /**
- * The Class EhBlockingCache.
+ * Cache implementation that wraps Ehcache 2 with {@link BlockingCache} semantics.
+ * <p>
+ * {@link BlockingCache} acquires a per-key lock when a cache miss occurs so that only one thread computes the missing
+ * value while others block. This prevents cache-stampede on a cold or expired entry.
+ * </p>
  *
  * @author Iwao AVE!
  */
@@ -49,6 +53,22 @@ public class EhBlockingCache extends AbstractEhcacheCache {
     // release any previous lock
     cache.put(new Element(key, null));
     return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Re-wraps the rebuilt cache in a {@link BlockingCache} after replacing it.
+   * </p>
+   */
+  @Override
+  protected void rebuildCacheWith(net.sf.ehcache.config.CacheConfiguration newConfig) {
+    CACHE_MANAGER.removeCache(id);
+    CACHE_MANAGER.addCache(new net.sf.ehcache.Cache(newConfig));
+    Ehcache ehcache = CACHE_MANAGER.getEhcache(id);
+    BlockingCache blockingCache = new BlockingCache(ehcache);
+    CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);
+    this.cache = CACHE_MANAGER.getEhcache(id);
   }
 
 }
