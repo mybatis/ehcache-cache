@@ -59,8 +59,8 @@
 
   <properties>
     <!-- Maven compiler options -->
-    <java.version>11</java.version>
-    <java.release.version>11</java.release.version>
+    <java.version>17</java.version>
+    <java.release.version>17</java.release.version>
 
     <clirr.comparisonVersion>1.2.0</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.mybatis.caches.ehcache.*</findbugs.onlyAnalyze>
