@@ -81,6 +81,13 @@ class HashKeyWrapperTest {
     assertNotEquals(w, null);
   }
 
+  @Test
+  void exposesWrappedKeyAndReadableToString() {
+    HashKeyWrapper wrapper = new HashKeyWrapper("wrapped");
+    assertEquals("wrapped", wrapper.getKey());
+    assertEquals("HashKeyWrapper{wrapped}", wrapper.toString());
+  }
+
   // ---------------------------------------------------------------------------
   // End-to-end: keys with colliding raw hashCodes survive the cache round-trip
   // ---------------------------------------------------------------------------
