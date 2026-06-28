@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractEhcacheCache.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis-ehcache</a> &gt; <a href="index.source.html" class="el_package">org.mybatis.caches.ehcache</a> &gt; <span class="el_source">AbstractEhcacheCache.java</span></div><h1>AbstractEhcacheCache.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2010-2026 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.mybatis.caches.ehcache;
+
+import java.io.Serializable;
+import java.nio.file.Path;
+import java.time.Duration;
+import java.util.concurrent.locks.ReadWriteLock;
+
+import org.apache.ibatis.cache.Cache;
+import org.ehcache.Cache.Entry;
+import org.ehcache.PersistentCacheManager;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.units.EntryUnit;
+import org.ehcache.config.units.MemoryUnit;
+
+/**
+ * Cache adapter for Ehcache 3.
+ *
+ * @author Simone Tripodi
+ */
+public abstract class AbstractEhcacheCache implements Cache {
+
+  /** Placeholder stored in Ehcache 3 for entries whose actual value is {@code null}. */
+<span class="fc" id="L41">  private static final Object NULL_VALUE = new NullValue();</span>
+
+  /**
+   * The cache manager reference. A {@link PersistentCacheManager} is used so that individual caches may optionally
+   * configure a disk tier via {@link #setMaxBytesLocalDisk(long)}.
+   */
+<span class="fc" id="L47">  protected static PersistentCacheManager CACHE_MANAGER = CacheManagerBuilder.newCacheManagerBuilder()</span>
+<span class="fc" id="L48">      .with(</span>
+<span class="fc" id="L49">          CacheManagerBuilder.persistence(Path.of(System.getProperty(&quot;java.io.tmpdir&quot;), &quot;ehcache-mybatis&quot;).toString()))</span>
+<span class="fc" id="L50">      .build(true);</span>
+
+  /**
+   * The cache id (namespace).
+   */
+  protected final String id;
+
+  /**
+   * The cache instance (lazily initialised on first use).
+   */
+  protected org.ehcache.Cache&lt;Object, Object&gt; cache;
+
+  protected long timeToIdleSeconds;
+  protected long timeToLiveSeconds;
+  protected long maxEntriesLocalHeap;
+  protected long maxEntriesLocalDisk;
+  protected long maxBytesLocalDisk;
+  protected String memoryStoreEvictionPolicy;
+
+  /**
+   * Instantiates a new abstract ehcache cache.
+   *
+   * @param id
+   *          the cache id (namespace)
+   */
+<span class="fc" id="L75">  public AbstractEhcacheCache(final String id) {</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">    if (id == null) {</span>
+<span class="fc" id="L77">      throw new IllegalArgumentException(&quot;Cache instances require an ID&quot;);</span>
+    }
+<span class="fc" id="L79">    this.id = id;</span>
+    // Remove any pre-existing cache so this instance always starts with a fresh default configuration.
+<span class="fc bfc" id="L81" title="All 2 branches covered.">    if (CACHE_MANAGER.getCache(id, Object.class, Object.class) != null) {</span>
+<span class="fc" id="L82">      CACHE_MANAGER.removeCache(id);</span>
+    }
+<span class="fc" id="L84">  }</span>
+
+  /**
+   * Returns the underlying Ehcache 3 cache, creating it on first use with the current configuration.
+   */
+  protected synchronized org.ehcache.Cache&lt;Object, Object&gt; getOrCreateCache() {
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    if (cache == null) {</span>
+<span class="fc" id="L91">      cache = buildAndRegisterCache();</span>
+    }
+<span class="fc" id="L93">    return cache;</span>
+  }
+
+  /**
+   * Builds and registers a new Ehcache 3 cache instance using the current configuration fields.
+   */
+  protected org.ehcache.Cache&lt;Object, Object&gt; buildAndRegisterCache() {
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    if (CACHE_MANAGER.getCache(id, Object.class, Object.class) != null) {</span>
+<span class="fc" id="L101">      CACHE_MANAGER.removeCache(id);</span>
+    }
+<span class="fc bfc" id="L103" title="All 2 branches covered.">    long heapEntries = maxEntriesLocalHeap &gt; 0 ? maxEntriesLocalHeap : Long.MAX_VALUE / 2;</span>
+<span class="fc" id="L104">    ResourcePoolsBuilder poolsBuilder = ResourcePoolsBuilder.newResourcePoolsBuilder().heap(heapEntries,</span>
+        EntryUnit.ENTRIES);
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (maxBytesLocalDisk &gt; 0) {</span>
+<span class="fc" id="L107">      poolsBuilder = poolsBuilder.disk(maxBytesLocalDisk, MemoryUnit.B);</span>
+    }
+<span class="fc" id="L109">    CacheConfigurationBuilder&lt;Object, Object&gt; builder = CacheConfigurationBuilder</span>
+<span class="fc" id="L110">        .newCacheConfigurationBuilder(Object.class, Object.class, poolsBuilder).withExpiry(buildExpiryPolicy());</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">    if (maxBytesLocalDisk &gt; 0) {</span>
+      // Disk and off-heap tiers require a Serializer since entries cannot be stored as object references.
+      // ObjectSerializer uses standard Java serialisation; cached values must implement Serializable.
+<span class="fc" id="L114">      builder = builder.withKeySerializer(ObjectSerializer.class).withValueSerializer(ObjectSerializer.class);</span>
+    }
+<span class="fc" id="L116">    CACHE_MANAGER.createCache(id, builder.build());</span>
+<span class="fc" id="L117">    return CACHE_MANAGER.getCache(id, Object.class, Object.class);</span>
+  }
+
+  private org.ehcache.expiry.ExpiryPolicy&lt;Object, Object&gt; buildExpiryPolicy() {
+<span class="fc bfc" id="L121" title="All 2 branches covered.">    if (timeToLiveSeconds &gt; 0) {</span>
+<span class="fc" id="L122">      return ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofSeconds(timeToLiveSeconds));</span>
+    }
+<span class="fc bfc" id="L124" title="All 2 branches covered.">    if (timeToIdleSeconds &gt; 0) {</span>
+<span class="fc" id="L125">      return ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofSeconds(timeToIdleSeconds));</span>
+    }
+<span class="fc" id="L127">    return ExpiryPolicyBuilder.noExpiration();</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void clear() {
+<span class="fc" id="L135">    getOrCreateCache().clear();</span>
+<span class="fc" id="L136">  }</span>
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getId() {
+<span class="fc" id="L143">    return id;</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getObject(Object key) {
+<span class="fc" id="L151">    Object value = getOrCreateCache().get(new HashKeyWrapper(key));</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">    return value instanceof NullValue ? null : value;</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getSize() {
+<span class="fc" id="L160">    int count = 0;</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">    for (Entry&lt;Object, Object&gt; ignored : getOrCreateCache()) {</span>
+<span class="fc" id="L162">      count++;</span>
+<span class="fc" id="L163">    }</span>
+<span class="fc" id="L164">    return count;</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void putObject(Object key, Object value) {
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">    getOrCreateCache().put(new HashKeyWrapper(key), value == null ? NULL_VALUE : value);</span>
+<span class="fc" id="L173">  }</span>
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object removeObject(Object key) {
+<span class="fc" id="L180">    Object obj = getObject(key);</span>
+<span class="fc" id="L181">    getOrCreateCache().remove(new HashKeyWrapper(key));</span>
+<span class="fc" id="L182">    return obj;</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void unlock(Object key) {
+<span class="fc" id="L189">  }</span>
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj) {
+<span class="fc bfc" id="L196" title="All 2 branches covered.">    if (this == obj) {</span>
+<span class="fc" id="L197">      return true;</span>
+    }
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">    if (obj == null) {</span>
+<span class="nc" id="L200">      return false;</span>
+    }
+<span class="fc bfc" id="L202" title="All 2 branches covered.">    if (!(obj instanceof Cache)) {</span>
+<span class="fc" id="L203">      return false;</span>
+    }
+
+<span class="fc" id="L206">    Cache otherCache = (Cache) obj;</span>
+<span class="fc" id="L207">    return id.equals(otherCache.getId());</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode() {
+<span class="fc" id="L215">    return id.hashCode();</span>
+  }
+
+  @Override
+  public ReadWriteLock getReadWriteLock() {
+<span class="fc" id="L220">    return null;</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString() {
+<span class="fc" id="L228">    return &quot;EHCache {&quot; + id + &quot;}&quot;;</span>
+  }
+
+  // DYNAMIC PROPERTIES
+
+  /**
+   * Sets the time to idle for an element before it expires. Is only used if the element is not eternal. If the cache
+   * has already been initialised the configuration change takes effect immediately by recreating the cache.
+   *
+   * @param timeToIdleSeconds
+   *          the default amount of time to live for an element from its last accessed or modified date
+   */
+  public void setTimeToIdleSeconds(long timeToIdleSeconds) {
+<span class="fc" id="L241">    this.timeToIdleSeconds = timeToIdleSeconds;</span>
+<span class="fc" id="L242">    recreateCacheIfInitialized();</span>
+<span class="fc" id="L243">  }</span>
+
+  /**
+   * Sets the time to live for an element before it expires. Is only used if the element is not eternal. If the cache
+   * has already been initialised the configuration change takes effect immediately by recreating the cache.
+   *
+   * @param timeToLiveSeconds
+   *          the default amount of time to live for an element from its creation date
+   */
+  public void setTimeToLiveSeconds(long timeToLiveSeconds) {
+<span class="fc" id="L253">    this.timeToLiveSeconds = timeToLiveSeconds;</span>
+<span class="fc" id="L254">    recreateCacheIfInitialized();</span>
+<span class="fc" id="L255">  }</span>
+
+  /**
+   * Sets the maximum objects to be held in memory (0 = no limit). If the cache has already been initialised the
+   * configuration change takes effect immediately by recreating the cache.
+   *
+   * @param maxEntriesLocalHeap
+   *          The maximum number of elements in heap, before they are evicted (0 == no limit)
+   */
+  public void setMaxEntriesLocalHeap(long maxEntriesLocalHeap) {
+<span class="fc" id="L265">    this.maxEntriesLocalHeap = maxEntriesLocalHeap;</span>
+<span class="fc" id="L266">    recreateCacheIfInitialized();</span>
+<span class="fc" id="L267">  }</span>
+
+  /**
+   * Sets the maximum number elements on Disk. 0 means unlimited.
+   * &lt;p&gt;
+   * Note: this property is retained for compatibility but has no effect in Ehcache 3, which does not support an
+   * entry-count limit for the disk tier. Use {@link #setMaxBytesLocalDisk(long)} to configure disk storage instead.
+   * &lt;/p&gt;
+   *
+   * @param maxEntriesLocalDisk
+   *          the maximum number of Elements to allow on the disk. 0 means unlimited.
+   */
+  public void setMaxEntriesLocalDisk(long maxEntriesLocalDisk) {
+<span class="fc" id="L280">    this.maxEntriesLocalDisk = maxEntriesLocalDisk;</span>
+<span class="fc" id="L281">    recreateCacheIfInitialized();</span>
+<span class="fc" id="L282">  }</span>
+
+  /**
+   * Sets the maximum bytes to be used for the disk tier. When greater than zero a disk resource pool is added to the
+   * cache, allowing entries evicted from the heap to overflow to disk. If set to zero (the default) no disk tier is
+   * configured and the cache is heap-only.
+   *
+   * @param maxBytesLocalDisk
+   *          the maximum number of bytes to allocate on disk. 0 means no disk tier (heap-only).
+   */
+  public void setMaxBytesLocalDisk(long maxBytesLocalDisk) {
+<span class="fc" id="L293">    this.maxBytesLocalDisk = maxBytesLocalDisk;</span>
+<span class="fc" id="L294">    recreateCacheIfInitialized();</span>
+<span class="fc" id="L295">  }</span>
+
+  /**
+   * Sets the eviction policy. Stored for informational purposes; Ehcache 3 manages its own eviction strategy.
+   *
+   * @param memoryStoreEvictionPolicy
+   *          a String representation of the policy. One of &quot;LRU&quot;, &quot;LFU&quot; or &quot;FIFO&quot;.
+   */
+  public void setMemoryStoreEvictionPolicy(String memoryStoreEvictionPolicy) {
+<span class="fc" id="L304">    this.memoryStoreEvictionPolicy = memoryStoreEvictionPolicy;</span>
+<span class="fc" id="L305">    recreateCacheIfInitialized();</span>
+<span class="fc" id="L306">  }</span>
+
+  /**
+   * Recreates the underlying Ehcache 3 cache with the current configuration if the cache has already been initialised.
+   * Called by property setters when a configuration change is requested after first use.
+   */
+  protected synchronized void recreateCacheIfInitialized() {
+<span class="fc bfc" id="L313" title="All 2 branches covered.">    if (cache != null) {</span>
+<span class="fc" id="L314">      cache = buildAndRegisterCache();</span>
+    }
+<span class="fc" id="L316">  }</span>
+
+  /**
+   * Placeholder used to represent a cached {@code null} value. Ehcache 3 does not permit null values, so this sentinel
+   * is stored and translated back to {@code null} on retrieval.
+   */
+  private static final class NullValue implements Serializable {
+    private static final long serialVersionUID = 1L;
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

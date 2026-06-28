@@ -1,0 +1,9 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+mybatis-ehcache,org.mybatis.caches.ehcache,DummyReadWriteLock,0,14,0,0,0,4,0,3,0,3
+mybatis-ehcache,org.mybatis.caches.ehcache,LoggingEhcache,0,4,0,0,0,2,0,1,0,1
+mybatis-ehcache,org.mybatis.caches.ehcache,EhBlockingCache,0,8,0,0,0,3,0,2,0,2
+mybatis-ehcache,org.mybatis.caches.ehcache,ObjectSerializer,0,64,0,0,0,16,0,4,0,4
+mybatis-ehcache,org.mybatis.caches.ehcache,DummyReadWriteLock.DummyLock,0,12,0,0,0,7,0,7,0,7
+mybatis-ehcache,org.mybatis.caches.ehcache,EhcacheCache,0,4,0,0,0,2,0,1,0,1
+mybatis-ehcache,org.mybatis.caches.ehcache,AbstractEhcacheCache,6,283,3,29,1,79,3,36,0,23
+mybatis-ehcache,org.mybatis.caches.ehcache,HashKeyWrapper,0,83,0,10,0,19,0,11,0,6
