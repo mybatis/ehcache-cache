@@ -15,12 +15,15 @@
  */
 package org.mybatis.caches.ehcache;
 
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
+import net.sf.ehcache.constructs.blocking.BlockingCache;
+
 /**
- * Cache implementation backed by Ehcache 3 that provides basic blocking semantics.
+ * Cache implementation that wraps Ehcache 2 with {@link BlockingCache} semantics.
  * &lt;p&gt;
- * In Ehcache 2 this class used {@code BlockingCache} to acquire per-key locks and prevent cache stampedes. Ehcache 3
- * does not provide an equivalent decorator, so blocking must be provided by the caller (e.g. by wrapping this cache
- * with {@link org.apache.ibatis.cache.decorators.BlockingCache}).
+ * {@link BlockingCache} acquires a per-key lock when a cache miss occurs so that only one thread computes the missing
+ * value while others block. This prevents cache-stampede on a cold or expired entry.
  * &lt;/p&gt;
  *
  * @author Iwao AVE!
@@ -34,15 +37,39 @@ public class EhBlockingCache extends AbstractEhcacheCache {
    *          the id
    */
   public EhBlockingCache(final String id) {
-<span class="fc" id="L37">    super(id);</span>
-<span class="fc" id="L38">  }</span>
+<span class="fc" id="L40">    super(id);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">    if (!CACHE_MANAGER.cacheExists(id)) {</span>
+<span class="fc" id="L42">      CACHE_MANAGER.addCache(this.id);</span>
+<span class="fc" id="L43">      Ehcache ehcache = CACHE_MANAGER.getEhcache(this.id);</span>
+<span class="fc" id="L44">      BlockingCache blockingCache = new BlockingCache(ehcache);</span>
+<span class="fc" id="L45">      CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);</span>
+    }
+<span class="fc" id="L47">    this.cache = CACHE_MANAGER.getEhcache(id);</span>
+<span class="fc" id="L48">  }</span>
 
   @Override
   public Object removeObject(Object key) {
-    // this method is called during a rollback to release any previously acquired lock;
-    // removing the entry is the correct action for Ehcache 3 (null values are not supported).
-<span class="fc" id="L44">    return super.removeObject(key);</span>
+    // this method is called during a rollback just to
+    // release any previous lock
+<span class="fc" id="L54">    cache.put(new Element(key, null));</span>
+<span class="fc" id="L55">    return null;</span>
   }
+
+  /**
+   * {@inheritDoc}
+   * &lt;p&gt;
+   * Re-wraps the rebuilt cache in a {@link BlockingCache} after replacing it.
+   * &lt;/p&gt;
+   */
+  @Override
+  protected void rebuildCacheWith(net.sf.ehcache.config.CacheConfiguration newConfig) {
+<span class="fc" id="L66">    CACHE_MANAGER.removeCache(id);</span>
+<span class="fc" id="L67">    CACHE_MANAGER.addCache(new net.sf.ehcache.Cache(newConfig));</span>
+<span class="fc" id="L68">    Ehcache ehcache = CACHE_MANAGER.getEhcache(id);</span>
+<span class="fc" id="L69">    BlockingCache blockingCache = new BlockingCache(ehcache);</span>
+<span class="fc" id="L70">    CACHE_MANAGER.replaceCacheWithDecoratedCache(ehcache, blockingCache);</span>
+<span class="fc" id="L71">    this.cache = CACHE_MANAGER.getEhcache(id);</span>
+<span class="fc" id="L72">  }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

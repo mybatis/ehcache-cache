@@ -16,7 +16,7 @@
 package org.mybatis.caches.ehcache;
 
 /**
- * Cache implementation backed by Ehcache 3.
+ * Cache implementation backed by Ehcache 2.
  */
 public class EhcacheCache extends AbstractEhcacheCache {
 
@@ -28,7 +28,11 @@ public class EhcacheCache extends AbstractEhcacheCache {
    */
   public EhcacheCache(String id) {
 <span class="fc" id="L30">    super(id);</span>
-<span class="fc" id="L31">  }</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">    if (!CACHE_MANAGER.cacheExists(id)) {</span>
+<span class="fc" id="L32">      CACHE_MANAGER.addCache(id);</span>
+    }
+<span class="fc" id="L34">    this.cache = CACHE_MANAGER.getEhcache(id);</span>
+<span class="fc" id="L35">  }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
