@@ -24,7 +24,7 @@
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.mybatis.caches.ehcache;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * Cache implementation backed by Ehcache 2.</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * Cache implementation backed by Ehcache 3.</em>
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="EhcacheCache" href="../../../../org/mybatis/caches/ehcache/EhcacheCache.html#EhcacheCache">EhcacheCache</a> <strong class="jxr_keyword">extends</strong> <a name="AbstractEhcacheCache" href="../../../../org/mybatis/caches/ehcache/AbstractEhcacheCache.html#AbstractEhcacheCache">AbstractEhcacheCache</a> {
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
@@ -36,13 +36,9 @@
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>    <strong class="jxr_keyword">public</strong> <a name="EhcacheCache" href="../../../../org/mybatis/caches/ehcache/EhcacheCache.html#EhcacheCache">EhcacheCache</a>(String id) {
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">super</strong>(id);
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">if</strong> (!CACHE_MANAGER.cacheExists(id)) {
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>        CACHE_MANAGER.addCache(id);
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>      }
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>      <strong class="jxr_keyword">this</strong>.cache = CACHE_MANAGER.getEhcache(id);
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    }
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  }
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    }
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2010–2026 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
