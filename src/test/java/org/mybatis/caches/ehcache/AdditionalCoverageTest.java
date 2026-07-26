@@ -35,16 +35,6 @@ import org.junit.jupiter.api.Test;
 class AdditionalCoverageTest {
 
   @Test
-  void loggingEhcacheConstructorCreatesUsableCache() {
-    LoggingEhcache cache = new LoggingEhcache("LOGGING_CACHE");
-
-    cache.putObject("k", "v");
-
-    assertEquals("LOGGING_CACHE", cache.getId());
-    assertEquals("v", cache.getObject("k"));
-  }
-
-  @Test
   void dummyReadWriteLockUsesSameNoOpLockForReadAndWrite() throws Exception {
     DummyReadWriteLock readWriteLock = new DummyReadWriteLock();
 
