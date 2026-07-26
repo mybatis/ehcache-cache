@@ -72,7 +72,7 @@ public abstract class AbstractEhcacheCache implements Cache {
    * @param id
    *          the cache id (namespace)
    */
-  public AbstractEhcacheCache(final String id) {
+  protected AbstractEhcacheCache(final String id) {
     if (id == null) {
       throw new IllegalArgumentException("Cache instances require an ID");
     }
