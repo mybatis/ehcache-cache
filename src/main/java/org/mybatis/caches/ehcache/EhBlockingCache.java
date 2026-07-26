@@ -39,8 +39,8 @@ public class EhBlockingCache extends AbstractEhcacheCache {
 
   @Override
   public Object removeObject(Object key) {
-    // this method is called during a rollback to release any previously acquired lock;
-    // removing the entry is the correct action for Ehcache 3 (null values are not supported).
+    // This method is called during a rollback to release any previously acquired lock.
+    // Removing the entry is the correct action for Ehcache 3 (null values are not supported).
     return super.removeObject(key);
   }
 
