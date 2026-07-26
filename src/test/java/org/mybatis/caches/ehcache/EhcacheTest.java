@@ -16,6 +16,7 @@
 package org.mybatis.caches.ehcache;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -34,6 +35,17 @@ class EhcacheTest {
   @BeforeEach
   void newCache() {
     cache = new EhcacheCache(DEFAULT_ID);
+  }
+
+  @Test
+  void shouldDemonstrateNullValue() {
+    cache.putObject(1, null);
+    assertNull(cache.getObject(1));
+  }
+
+  @Test
+  void shouldDemonstrateNotEquals() {
+    assertFalse(cache.equals(null));
   }
 
   @Test
