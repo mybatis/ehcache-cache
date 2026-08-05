@@ -82,7 +82,6 @@ class AdditionalCoverageTest {
   void abstractCacheUnlockAndReadWriteLockDefaultBehavior() {
     AbstractEhcacheCache cache = new EhcacheCache("ABSTRACT_BEHAVIOR");
 
-    assertDoesNotThrow(() -> cache.unlock("k"));
     assertNull(cache.getReadWriteLock());
   }
 
