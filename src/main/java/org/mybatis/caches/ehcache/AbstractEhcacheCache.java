@@ -127,34 +127,22 @@ public abstract class AbstractEhcacheCache implements Cache {
     return ExpiryPolicyBuilder.noExpiration();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void clear() {
     getOrCreateCache().clear();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String getId() {
     return id;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Object getObject(Object key) {
     Object value = getOrCreateCache().get(new HashKeyWrapper(key));
     return value instanceof NullValue ? null : value;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public int getSize() {
     int count = 0;
@@ -164,17 +152,11 @@ public abstract class AbstractEhcacheCache implements Cache {
     return count;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void putObject(Object key, Object value) {
     getOrCreateCache().put(new HashKeyWrapper(key), value == null ? NULL_VALUE : value);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Object removeObject(Object key) {
     Object obj = getObject(key);
@@ -188,9 +170,6 @@ public abstract class AbstractEhcacheCache implements Cache {
   public void unlock(Object key) {
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -207,9 +186,6 @@ public abstract class AbstractEhcacheCache implements Cache {
     return id.equals(otherCache.getId());
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public int hashCode() {
     return id.hashCode();
@@ -220,9 +196,6 @@ public abstract class AbstractEhcacheCache implements Cache {
     return null;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String toString() {
     return "EHCache {" + id + "}";
