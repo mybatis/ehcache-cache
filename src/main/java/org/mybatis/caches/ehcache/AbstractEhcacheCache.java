@@ -145,11 +145,11 @@ public abstract class AbstractEhcacheCache implements Cache {
 
   @Override
   public int getSize() {
-    int count = 0;
-    for (Entry<Object, Object> ignored : getOrCreateCache()) {
-      count++;
+    int size = 0;
+    for (@SuppressWarnings("unused") Entry<Object, Object> entry : getOrCreateCache()) {
+      size++;
     }
-    return count;
+    return size;
   }
 
   @Override
