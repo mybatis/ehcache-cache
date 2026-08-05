@@ -39,10 +39,10 @@ public class ObjectSerializer implements Serializer<Object> {
    * Constructor required by Ehcache 3's serializer contract.
    *
    * @param loader
-   *          the class loader to use when deserialising objects
+   *          the class loader supplied by Ehcache; currently unused
    */
   public ObjectSerializer(@SuppressWarnings("unused") ClassLoader loader) {
-    // class loader is not used; standard ObjectInputStream resolves classes through the context class loader
+    // Intentionally unused; Java serialization uses the default class resolution mechanism.
   }
 
   @Override
