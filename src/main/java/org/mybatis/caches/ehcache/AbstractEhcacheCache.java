@@ -164,12 +164,6 @@ public abstract class AbstractEhcacheCache implements Cache {
     return obj;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void unlock(Object key) {
-  }
-
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
