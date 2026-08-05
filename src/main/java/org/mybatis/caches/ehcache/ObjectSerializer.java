@@ -41,7 +41,7 @@ public class ObjectSerializer implements Serializer<Object> {
    * @param loader
    *          the class loader to use when deserialising objects
    */
-  public ObjectSerializer(ClassLoader loader) {
+  public ObjectSerializer(@SuppressWarnings("unused") ClassLoader loader) {
     // class loader is not used; standard ObjectInputStream resolves classes through the context class loader
   }
 
